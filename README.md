@@ -7,10 +7,10 @@ polar and non-polar covalent bonds. Everything is in one file: `index.html`.
 
 1. **Learn**: 10 short slides with animated diagrams. The first slide opens
    with a 3D-style oxygen atom: a nucleus of 8 protons, with electrons spinning
-   in see-through shells, drawn live on a canvas. The slides cover an atoms and bonding recap,
-   covalent bonds, electronegativity, non-polar and polar bonds, the ΔEN rule of
-   thumb, worked examples, water and oil, a summary, and an optional CO₂
-   challenge slide).
+   in see-through shells, drawn live on a canvas. The slides cover an atoms
+   and bonding recap, covalent bonds, electronegativity, non-polar and polar
+   bonds, the ΔEN rule of thumb, worked examples, water and oil, a summary,
+   and an optional CO₂ challenge slide.
 2. **Explore**
    - **Bond Builder**: pick any two atoms and see the shared electron pair move,
      the δ+ / δ− labels, a ΔEN meter and the calculation written out.
@@ -37,9 +37,10 @@ the rule of thumb, and ways to answer questions that go beyond the syllabus.
 - **On a computer:** download `index.html` and double-click it. It opens in
   any modern browser (Chrome, Edge, Firefox, Safari).
 - **On a phone:** open the file from your downloads or a shared drive.
-- It works fully **offline**. All animations are drawn by the page itself
-  (CSS, SVG and canvas). If the device is set to reduce motion, they stay still. It needs no internet, no login and no
+- It works fully **offline**. It needs no internet, no login and no
   installation, and it saves or sends nothing.
+- All animations are drawn by the page itself (CSS, SVG and canvas). If the
+  device is set to reduce motion, they stay still.
 - To move between slides, use the ← / → arrow keys or the Next and Previous
   buttons. The sun/moon button switches between light and dark mode.
 
