@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polar and Non-polar Bonds</title>
+<meta name="description" content="An interactive introduction to polar and non-polar covalent bonds for ICSE Class 8 students.">
+<style>
+/* ---------- Colour tokens ---------- */
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f7;
+  --ink: #111827;
+  --muted: #3f4a5a;
+  --line: #c3cad6;
+  --accent: #3730a3;
+  --accent-ink: #ffffff;
+  --neg: #1d4ed8;        /* δ− is always BLUE */
+  --neg-soft: #dbe6ff;
+  --pos: #c2410c;        /* δ+ is always ORANGE */
+  --pos-soft: #ffe4d2;
+  --ok: #166534;
+  --ok-soft: #dcfce7;
+  --bad: #b91c1c;
+  --bad-soft: #fee2e2;
+  --atom: #e7ebf3;
+  --atom-line: #4b5563;
+  --cloud: #2563eb;
+  --rope: #92400e;
+  --z1: #d1fae5;
+  --z2: #fef3c7;
+  --z3: #fde2e2;
+  --oil: #eab308;
+  --water: #93c5fd;
+  --teach-bg: #fff8e6;
+  --teach-line: #b45309;
+  --teach-ink: #3b2a06;
+  --focus: #f59e0b;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1424; --surface: #17213a; --surface-2: #1f2b47; --ink: #f3f6fb; --muted: #c9d3e3;
+    --line: #50607d; --accent: #a5b4fc; --accent-ink: #0d1424;
+    --neg: #7cb0ff; --neg-soft: #1b3160; --pos: #ffa266; --pos-soft: #4a2412;
+    --ok: #6ee79a; --ok-soft: #123b24; --bad: #ff8a8a; --bad-soft: #4a1616;
+    --atom: #2a3757; --atom-line: #b8c3d8; --cloud: #7cb0ff; --rope: #e2b47a;
+    --z1: #164034; --z2: #4a3c0e; --z3: #4d1f24; --oil: #facc15; --water: #1e4f8f;
+    --teach-bg: #2a2212; --teach-line: #f0b252; --teach-ink: #fbeccc; --focus: #fbbf24;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1424; --surface: #17213a; --surface-2: #1f2b47; --ink: #f3f6fb; --muted: #c9d3e3;
+  --line: #50607d; --accent: #a5b4fc; --accent-ink: #0d1424;
+  --neg: #7cb0ff; --neg-soft: #1b3160; --pos: #ffa266; --pos-soft: #4a2412;
+  --ok: #6ee79a; --ok-soft: #123b24; --bad: #ff8a8a; --bad-soft: #4a1616;
+  --atom: #2a3757; --atom-line: #b8c3d8; --cloud: #7cb0ff; --rope: #e2b47a;
+  --z1: #164034; --z2: #4a3c0e; --z3: #4d1f24; --oil: #facc15; --water: #1e4f8f;
+  --teach-bg: #2a2212; --teach-line: #f0b252; --teach-ink: #fbeccc; --focus: #fbbf24;
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+  font-size: 20px;
+  line-height: 1.55;
+}
+@media (max-width: 600px) { body { font-size: 18px; } }
+h1, h2, h3 { line-height: 1.25; margin: 0 0 .5em; }
+h2 { font-size: 1.6em; }
+h3 { font-size: 1.25em; }
+p { margin: 0 0 .7em; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+sub { font-size: .7em; }
+.neg { color: var(--neg); font-weight: 700; }
+.pos { color: var(--pos); font-weight: 700; }
+.muted { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--accent); color: var(--accent-ink); padding: 8px 14px; z-index: 50; }
+.skip:focus { left: 8px; top: 8px; }
+
+/* ---------- Header / nav ---------- */
+header.top {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.top-inner {
+  max-width: 1100px; margin: 0 auto; padding: 8px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.brand { font-weight: 800; font-size: 1.05em; margin-right: auto; }
+.brand small { display: block; font-weight: 500; font-size: .7em; color: var(--muted); }
+nav.main { display: flex; gap: 6px; order: 3; width: 100%; }
+nav.main button {
+  flex: 1; min-height: 48px; border: 2px solid var(--line); background: var(--surface-2);
+  border-radius: 12px; font-weight: 700; padding: 6px 10px;
+}
+nav.main button[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+@media (max-width: 600px) {
+  .top-inner { padding: 6px 12px; gap: 6px; }
+  .brand { font-size: .9em; }
+  .brand small { display: none; }
+  .teacher-btn span { display: none; }
+  .t-head h2 { font-size: 1em; }
+  nav.main button { min-height: 44px; padding: 4px 6px; font-size: 17px; }
+}
+@media (min-width: 820px) {
+  nav.main { order: 0; width: auto; }
+  nav.main button { flex: none; padding: 6px 18px; }
+  .brand { margin-right: 12px; }
+  .tools { margin-left: auto; }
+}
+.tools { display: flex; gap: 8px; align-items: center; }
+.icon-btn {
+  min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid var(--line);
+  background: transparent; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 4px 8px;
+}
+.icon-btn svg { width: 22px; height: 22px; }
+.teacher-btn { font-size: 13px; color: var(--muted); border-style: dashed; }
+.teacher-btn svg { width: 18px; height: 18px; }
+
+/* ---------- Layout ---------- */
+main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+section.view[hidden] { display: none; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+@media (max-width: 600px) { .card { padding: 16px; border-radius: 14px; } }
+.btn {
+  min-height: 48px; padding: 8px 20px; border-radius: 12px; border: 2px solid var(--accent);
+  background: var(--accent); color: var(--accent-ink); font-weight: 700;
+}
+.btn.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.pill { display: inline-block; padding: 2px 12px; border-radius: 999px; font-size: .8em; font-weight: 700; border: 2px solid currentColor; }
+.challenge-pill { color: #7c2d12; background: #ffedd5; }
+:root[data-theme="dark"] .challenge-pill { color: #fed7aa; background: #431407; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .challenge-pill { color: #fed7aa; background: #431407; } }
+.key { display: inline-flex; flex-wrap: wrap; gap: 8px 18px; font-size: .85em; margin: 0 0 12px; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
+
+/* ---------- Learn: slides ---------- */
+.progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.progress { flex: 1; height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; border: 1px solid var(--line); }
+.progress > div { height: 100%; background: var(--accent); width: 10%; transition: width .4s ease; }
+.progress-label { font-weight: 700; white-space: nowrap; font-size: .9em; }
+.slide { display: grid; gap: 20px; align-items: center; }
+@media (min-width: 860px) { .slide { grid-template-columns: 1.05fr 1fr; } }
+.slide h2 { margin-bottom: .4em; }
+.slide ul { padding-left: 1.2em; margin: 0 0 .6em; }
+.slide li { margin-bottom: .45em; }
+.fig { width: 100%; max-width: 520px; margin: 0 auto; display: block; }
+.fig-box { background: var(--surface-2); border-radius: 16px; padding: 10px; }
+.slide-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.hint-keys { font-size: .8em; color: var(--muted); text-align: center; margin-top: 10px; }
+.note { border-left: 5px solid var(--accent); background: var(--surface-2); padding: 10px 14px; border-radius: 8px; font-size: .92em; }
+table.rule { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: .95em; }
+table.rule th, table.rule td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+table.rule th { background: var(--surface-2); }
+.tbl-scroll { overflow-x: auto; }
+
+/* ---------- SVG shared styles ---------- */
+svg text { font-family: inherit; fill: var(--ink); }
+.atom { fill: var(--atom); stroke: var(--atom-line); stroke-width: 2.5; }
+.atom.n { stroke: var(--neg); stroke-width: 5; }
+.atom.p { stroke: var(--pos); stroke-width: 5; }
+.sym { font-weight: 800; font-size: 26px; text-anchor: middle; dominant-baseline: central; }
+.lbl { font-size: 19px; }
+.lbl-s { font-size: 16px; fill: var(--muted); }
+.dlabel-n { fill: var(--neg) !important; font-weight: 800; font-size: 24px; text-anchor: middle; }
+.dlabel-p { fill: var(--pos) !important; font-weight: 800; font-size: 24px; text-anchor: middle; }
+.edot { fill: var(--ink); }
+.ecross { stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.shell { fill: none; stroke: var(--line); stroke-width: 2; stroke-dasharray: 5 5; }
+.bondline { stroke: var(--atom-line); stroke-width: 4; stroke-linecap: round; }
+.arrow { stroke: var(--ink); stroke-width: 3; fill: none; }
+.arrowhead { fill: var(--ink); }
+.cloud { fill: var(--cloud); }
+.rope { stroke: var(--rope); stroke-width: 6; stroke-linecap: round; }
+
+/* ---------- Animations (all disabled by reduced-motion) ---------- */
+@keyframes inLeft { from { transform: translateX(-60px); } to { transform: translateX(0); } }
+@keyframes inRight { from { transform: translateX(60px); } to { transform: translateX(0); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+@keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes sway { 0% { transform: translateX(0); } 60% { transform: translateX(34px); } 80% { transform: translateX(26px); } 100% { transform: translateX(32px); } }
+@keyframes shift35 { from { transform: translateX(0); } to { transform: translateX(35px); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sweep { 0% { transform: translateX(0); } 100% { transform: translateX(310px); } }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-70px); opacity: 0; } }
+@keyframes pushOut { 0%,100% { transform: translateX(0); } 50% { transform: translateX(var(--dx)); } }
+@keyframes jump { from { transform: translateX(-35px); } to { transform: translateX(0); } }
+@keyframes shift12 { from { transform: translateX(0); } to { transform: translateX(12px); } }
+@keyframes wiggle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+
+.a-inL { animation: inLeft 1.6s ease-out .4s both; }
+.a-inR { animation: inRight 1.6s ease-out .4s both; }
+.a-pulse { animation: pulse 2.4s ease-in-out infinite; }
+.a-breathe { transform-box: fill-box; transform-origin: center; animation: breathe 3s ease-in-out infinite; }
+.a-sway { animation: sway 3.5s ease-in-out .3s infinite alternate; transform: translateX(32px); }
+.a-shift35 { transform: translateX(35px); animation: shift35 1.8s ease-in-out .6s both; }
+.a-fade { animation: fadeIn .8s ease 2.2s both; }
+.a-fade1 { animation: fadeIn .6s ease .3s both; }
+.a-fade2 { animation: fadeIn .6s ease 1s both; }
+.a-fade3 { animation: fadeIn .6s ease 1.7s both; }
+.a-fade4 { animation: fadeIn .6s ease 2.4s both; }
+.a-fade5 { animation: fadeIn .6s ease 3.1s both; }
+.a-sweep { animation: sweep 7s ease-in-out infinite alternate; }
+.a-rise { opacity: 0; animation: rise 4s ease-in infinite; }
+.a-push { animation: pushOut 2.2s ease-in-out infinite; }
+.a-jump { animation: jump 1.4s ease-in-out .8s both; }
+.a-shift12 { transform: translateX(12px); animation: shift12 1.4s ease-in-out .8s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Opening slide: 3D-style atom (canvas) ---------- */
+.atom3d { display: block; width: 100%; max-width: 440px; aspect-ratio: 36 / 26; margin: 0 auto; }
+.a3-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; font-size: 16px; margin: 6px 4px 0; }
+.a3-legend span { display: flex; align-items: center; gap: 8px; }
+.a3-sw { flex: none; width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
+.a3-sw.nuc { background: radial-gradient(circle at 35% 35%, #fff3c4, #d4a017 60%, #8a6508); }
+.a3-sw.a3-el { background: radial-gradient(circle at 35% 35%, var(--surface), var(--ink) 65%); }
+.a3-sw.a3-in { background: var(--pos); opacity: .7; }
+.a3-sw.a3-out { background: var(--neg); opacity: .7; }
+.a3-note { font-size: 15px; color: var(--muted); margin: 8px 4px 0; }
+@media (max-width: 420px) { .a3-legend { grid-template-columns: 1fr; } }
+
+/* ---------- Explore ---------- */
+.subnav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.subnav button {
+  min-height: 48px; padding: 6px 16px; border-radius: 12px; border: 2px solid var(--line);
+  background: var(--surface); font-weight: 700;
+}
+.subnav button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.panel[hidden] { display: none; }
+.builder-grid { display: grid; gap: 20px; }
+@media (min-width: 900px) { .builder-grid { grid-template-columns: 1fr 1fr; } }
+.pickers { display: grid; gap: 16px; }
+@media (min-width: 600px) and (max-width: 899px) { .pickers { grid-template-columns: 1fr 1fr; } }
+.picker h3 { font-size: 1em; margin-bottom: 6px; }
+.ptable { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; max-width: 420px; }
+.ptable .gap { visibility: hidden; }
+.el {
+  min-height: 52px; border-radius: 8px; border: 2px solid var(--line); background: var(--surface-2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px; line-height: 1.1;
+}
+.el b { font-size: 19px; }
+.el span { font-size: 13px; color: var(--muted); }
+.el.metal { border-style: dashed; }
+.el[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); border-style: solid; }
+.el[aria-pressed="true"] span { color: var(--accent-ink); }
+.ptable-note { font-size: 14px; color: var(--muted); margin-top: 6px; }
+.bb-stage { transition: none; }
+.bb-move { transition: transform .9s cubic-bezier(.4,.1,.2,1); }
+.bb-fade { transition: opacity .6s ease; }
+.meter { margin: 14px 0 6px; }
+.meter-bar { position: relative; height: 30px; display: flex; border-radius: 8px; overflow: visible; border: 2px solid var(--line); }
+.meter-bar .z { height: 100%; }
+.meter-bar .z1 { background: var(--z1); border-radius: 6px 0 0 6px; }
+.meter-bar .z2 { background: var(--z2); border-left: 2px solid var(--ink); }
+.meter-bar .z3 { background: var(--z3); border-left: 2px solid var(--ink); border-radius: 0 6px 6px 0; background-image: repeating-linear-gradient(45deg, transparent 0 8px, rgba(0,0,0,.07) 8px 12px); }
+.needle { position: absolute; top: -12px; bottom: -12px; width: 0; border-left: 4px solid var(--ink); transition: left .9s cubic-bezier(.4,.1,.2,1); }
+.needle::before { content: ""; position: absolute; top: -4px; left: -10px; border: 8px solid transparent; border-top: 10px solid var(--ink); }
+.meter-ticks { position: relative; height: 24px; font-size: 14px; color: var(--muted); }
+.meter-ticks span { position: absolute; transform: translateX(-50%); }
+.meter-zones { position: relative; height: 26px; font-size: 15px; font-weight: 700; }
+.meter-zones span { position: absolute; white-space: nowrap; }
+.calc { font-size: 1.15em; font-weight: 800; margin: 10px 0 6px; }
+.verdict { padding: 10px 14px; border-radius: 10px; background: var(--surface-2); border: 2px solid var(--line); }
+.warn { margin-top: 10px; padding: 10px 14px; border-radius: 10px; border: 2px dashed var(--pos); background: var(--pos-soft); font-size: .92em; }
+.sliders { display: grid; gap: 14px; margin-top: 10px; }
+@media (min-width: 700px) { .sliders { grid-template-columns: 1fr 1fr; } }
+.sliders label { font-weight: 700; display: block; }
+input[type=range] { width: 100%; height: 44px; accent-color: var(--accent); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.presets button { min-height: 44px; padding: 4px 14px; border-radius: 10px; border: 2px solid var(--line); background: var(--surface-2); font-weight: 600; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.mcard {
+  min-height: 84px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface-2); padding: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+.mcard b { font-size: 1.25em; }
+.mcard span { font-size: 14px; color: var(--muted); }
+.mcard[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.mcard[aria-pressed="true"] span { color: var(--accent-ink); }
+.mcard.challenge { border-style: dashed; }
+
+/* ---------- Quiz ---------- */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.options { display: grid; gap: 10px; margin: 14px 0; }
+.opt {
+  text-align: left; min-height: 56px; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--line);
+  background: var(--surface-2); display: flex; gap: 12px; align-items: center;
+}
+.opt .letter { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2px solid currentColor; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; }
+.opt:not(:disabled):hover { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.correct { border-color: var(--ok); background: var(--ok-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt .mark { margin-left: auto; font-weight: 800; white-space: nowrap; }
+.feedback { padding: 12px 14px; border-radius: 12px; margin: 10px 0; border: 2px solid; }
+.feedback.ok { border-color: var(--ok); background: var(--ok-soft); }
+.feedback.no { border-color: var(--bad); background: var(--bad-soft); }
+.hint-box { padding: 10px 14px; border-radius: 10px; background: var(--surface-2); border: 2px dashed var(--accent); margin-top: 8px; }
+.qbtns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+.score-big { font-size: 2.2em; font-weight: 800; }
+.review li { margin-bottom: 12px; }
+
+/* ---------- Teacher dialog ---------- */
+dialog.teacher {
+  width: min(860px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0; border: 4px solid var(--teach-line);
+  border-radius: 16px; background: var(--teach-bg); color: var(--teach-ink);
+}
+dialog.teacher::backdrop { background: rgba(10, 15, 30, .6); }
+.t-head {
+  position: sticky; top: 0; background: var(--teach-line); color: #fff; padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+:root[data-theme="dark"] .t-head { color: #1b1405; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .t-head { color: #1b1405; } }
+.t-head h2 { margin: 0; font-size: 1.15em; }
+.t-head .tag { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; display: block; }
+.t-head button { flex: none; white-space: nowrap; min-height: 44px; min-width: 44px; border-radius: 10px; border: 2px solid currentColor; background: transparent; color: inherit; font-weight: 800; padding: 4px 12px; }
+.t-body { padding: 16px 20px 24px; font-size: 18px; }
+.t-body h3 { font-size: 1.1em; margin-top: 1.1em; border-bottom: 2px solid var(--teach-line); padding-bottom: 4px; }
+.t-body ul { padding-left: 1.2em; }
+.t-body li { margin-bottom: .4em; }
+.t-body dt { font-weight: 800; margin-top: .6em; }
+.t-body dd { margin: 0 0 .4em 1em; }
+
+/* ---------- Electronegativity Map ---------- */
+.map-layout { display: grid; gap: 20px; align-items: start; }
+@media (min-width: 900px) { .map-layout { grid-template-columns: 3fr 2fr; } }
+.en-legend { margin-bottom: 10px; }
+.en-legend-labels { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; }
+.en-legend-bar { height: 18px; border-radius: 6px; border: 2px solid var(--line); }
+.en-legend-ticks { position: relative; height: 22px; font-size: 14px; color: var(--muted); }
+.en-legend-ticks span { position: absolute; transform: translateX(-50%); }
+.en-legend-ticks span::before { content: ""; position: absolute; left: 50%; top: -5px; height: 5px; border-left: 2px solid var(--muted); }
+.en-trend-x { font-size: 15px; font-weight: 700; color: var(--muted); margin: 2px 0 6px 28px; }
+.en-map-row { display: flex; gap: 6px; }
+.en-trend-y { writing-mode: vertical-rl; font-size: 15px; font-weight: 700; color: var(--muted); text-align: center; width: 22px; flex: none; }
+.en-map { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.enc {
+  position: relative; min-height: 60px; border-radius: 8px; border: 2px solid rgba(0,0,0,.25); padding: 3px 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1;
+}
+.enc .z { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: 700; }
+.enc b { font-size: 20px; margin-top: 6px; }
+.enc .v { font-size: 13px; font-weight: 600; }
+.enc[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--ink); z-index: 1; }
+@media (max-width: 600px) {
+  .en-trend-y { display: none; }
+  .en-trend-x { margin-left: 0; }
+  .en-map { gap: 3px; }
+  .enc { min-height: 54px; border-radius: 6px; }
+  .enc b { font-size: 17px; }
+  .enc .v { font-size: 12px; }
+  .enc .z { font-size: 10px; left: 3px; }
+}
+.map-detail .fig-box { padding: 6px; }
+.map-detail svg { display: block; width: 100%; max-width: 250px; margin: 0 auto; }
+.map-detail h3 { margin: 0 0 8px; }
+.md-top { display: grid; gap: 10px; margin-bottom: 8px; }
+.map-detail p { font-size: 18px; margin-bottom: .4em; }
+@media (min-width: 900px) {
+  .md-top { grid-template-columns: 200px 1fr; align-items: center; }
+  .md-top .en-facts { grid-template-columns: 1fr; gap: 0; }
+  .md-top .en-facts dd { margin-bottom: 6px; }
+  .en-chip { margin-left: 0; margin-top: 2px; }
+}
+.en-facts { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0 0 8px; font-size: .95em; }
+.en-facts dt { font-weight: 700; }
+.en-facts dd { margin: 0; }
+.en-chip { display: inline-block; padding: 0 10px; border-radius: 999px; font-size: .85em; font-weight: 700; border: 1px solid rgba(0,0,0,.25); margin-left: 6px; }
+
+footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to lesson</a>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">Polar &amp; Non-polar Bonds<small>Class 8 Chemistry · Covalent bonding</small></div>
+    <nav class="main" aria-label="Lesson sections">
+      <button type="button" data-view="learn" aria-current="page">1. Learn</button>
+      <button type="button" data-view="explore">2. Explore</button>
+      <button type="button" data-view="quiz">3. Quiz</button>
+    </nav>
+    <div class="tools">
+      <button type="button" class="icon-btn" id="themeBtn" aria-label="Switch to dark mode" title="Light / dark mode">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+      <button type="button" class="icon-btn teacher-btn" id="teacherBtn" aria-haspopup="dialog" aria-label="Teacher Notes (for teachers)" title="Teacher Notes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>
+        <span>Notes</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= LEARN ================= -->
+<section class="view" id="view-learn" aria-labelledby="learn-h">
+  <h1 class="sr-only" id="learn-h">Learn</h1>
+  <div class="card">
+    <div class="progress-wrap">
+      <div class="progress" role="progressbar" aria-label="Slide progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1"><div id="progFill"></div></div>
+      <div class="progress-label" id="progLabel">Slide 1 of 10</div>
+    </div>
+    <div id="slide" aria-live="polite"></div>
+    <div class="slide-nav">
+      <button type="button" class="btn secondary" id="prevBtn">← Previous</button>
+      <button type="button" class="btn" id="nextBtn">Next →</button>
+    </div>
+    <p class="hint-keys">Tip: use the ← and → arrow keys to move between slides.</p>
+  </div>
+</section>
+
+<!-- ================= EXPLORE ================= -->
+<section class="view" id="view-explore" aria-labelledby="explore-h" hidden>
+  <h1 id="explore-h" style="font-size:1.6em">Explore</h1>
+  <div class="subnav" role="group" aria-label="Explore panels">
+    <button type="button" data-panel="A" aria-pressed="true">A. Bond Builder</button>
+    <button type="button" data-panel="B" aria-pressed="false">B. Tug-of-War</button>
+    <button type="button" data-panel="C" aria-pressed="false">C. Molecule Gallery</button>
+    <button type="button" data-panel="D" aria-pressed="false">D. Electronegativity Map</button>
+  </div>
+
+  <!-- Panel A -->
+  <div class="panel card" id="panel-A">
+    <h2>Bond Builder</h2>
+    <p>Pick two atoms. Watch where the shared pair of electrons goes.</p>
+    <div class="key" aria-hidden="true">
+      <span><i class="swatch" style="background:var(--neg)"></i> δ− (partly negative)</span>
+      <span><i class="swatch" style="background:var(--pos)"></i> δ+ (partly positive)</span>
+      <span>● and × = the two electrons</span>
+    </div>
+    <div class="builder-grid">
+      <div class="pickers">
+        <div class="picker"><h3 id="p1h">Atom 1</h3><div class="ptable" role="group" aria-labelledby="p1h" id="picker1"></div></div>
+        <div class="picker"><h3 id="p2h">Atom 2</h3><div class="ptable" role="group" aria-labelledby="p2h" id="picker2"></div></div>
+        <p class="ptable-note">Laid out like the periodic table. Only the elements used in this lesson are shown. Dashed tiles are metals. Numbers are electronegativity values.</p>
+      </div>
+      <div>
+        <div class="fig-box">
+          <svg class="fig" viewBox="0 0 400 210" role="img" aria-labelledby="bbDesc" id="bbSvg">
+            <title id="bbDesc">Two atoms and their shared electron pair</title>
+            <defs>
+              <linearGradient id="bbGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop id="bbStopL" offset="0" stop-color="var(--cloud)" stop-opacity=".25"/>
+                <stop id="bbStopR" offset="1" stop-color="var(--cloud)" stop-opacity=".25"/>
+              </linearGradient>
+            </defs>
+            <ellipse id="bbCloud" class="bb-fade" cx="200" cy="112" rx="165" ry="62" fill="url(#bbGrad)"/>
+            <g id="bbA1" class="bb-move">
+              <circle id="bbC1" class="atom" cx="110" cy="112" r="48"/>
+              <text id="bbS1" class="sym" x="110" y="112">H</text>
+              <text id="bbD1" class="bb-fade" x="110" y="46" text-anchor="middle"></text>
+            </g>
+            <g id="bbA2" class="bb-move">
+              <circle id="bbC2" class="atom" cx="290" cy="112" r="48"/>
+              <text id="bbS2" class="sym" x="290" y="112">Cl</text>
+              <text id="bbD2" class="bb-fade" x="290" y="46" text-anchor="middle"></text>
+            </g>
+            <line x1="200" y1="160" x2="200" y2="176" stroke="var(--muted)" stroke-width="2"/>
+            <text x="200" y="196" text-anchor="middle" class="lbl-s">middle</text>
+            <g id="bbPair" class="bb-move">
+              <circle class="edot" cx="200" cy="102" r="6"/>
+              <path class="ecross" d="M194 116 l12 12 M206 116 l-12 12"/>
+            </g>
+          </svg>
+        </div>
+        <div class="meter" aria-hidden="true">
+          <div class="meter-zones"><span style="left:0">Non-polar</span><span style="left:28%">Polar</span><span style="left:70%">Ionic</span></div>
+          <div class="meter-bar">
+            <div class="z z1" style="width:11.43%"></div>
+            <div class="z z2" style="width:37.14%"></div>
+            <div class="z z3" style="width:51.43%"></div>
+            <div class="needle" id="bbNeedle" style="left:0"></div>
+          </div>
+          <div class="meter-ticks"><span style="left:0;transform:none">0</span><span style="left:11.43%">0.4</span><span style="left:48.57%">1.7</span><span style="left:100%;transform:translateX(-100%)">3.5</span></div>
+        </div>
+        <div aria-live="polite" id="bbOut">
+          <p class="calc" id="bbCalc"></p>
+          <div class="verdict" id="bbVerdict"></div>
+          <div class="warn" id="bbWarn" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel B -->
+  <div class="panel card" id="panel-B" hidden>
+    <h2>Tug-of-War</h2>
+    <p>Two atoms pull on the shared electron pair (the flag). Move the sliders to change how strongly each atom pulls.</p>
+    <div class="fig-box">
+      <svg class="fig" viewBox="0 0 400 220" role="img" aria-labelledby="twTitle">
+        <title id="twTitle">Tug-of-war between two atoms over the electron pair</title>
+        <line x1="200" y1="40" x2="200" y2="190" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 6"/>
+        <text x="200" y="210" text-anchor="middle" class="lbl-s">middle</text>
+        <g id="twRope" class="bb-move">
+          <g>
+            <line class="rope" x1="10" y1="120" x2="390" y2="120"/>
+            <line x1="200" y1="120" x2="200" y2="68" stroke="var(--ink)" stroke-width="3"/>
+            <path d="M200 68 L240 82 L200 96 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5"/>
+            <circle class="edot" cx="210" cy="82" r="4.5"/>
+            <path class="ecross" d="M218 78 l8 8 M226 78 l-8 8" style="stroke-width:2.5"/>
+          </g>
+        </g>
+        <g id="twA" style="transform-box:fill-box;transform-origin:center bottom" class="bb-move">
+          <circle class="atom" id="twCA" cx="55" cy="120" r="40"/>
+          <circle cx="44" cy="108" r="4" fill="var(--ink)"/><circle cx="66" cy="108" r="4" fill="var(--ink)"/>
+          <path d="M44 134 q11 8 22 0" stroke="var(--ink)" stroke-width="3" fill="none"/>
+          <circle cx="95" cy="120" r="8" fill="var(--atom)" stroke="var(--atom-line)" stroke-width="2.5"/>
+        </g>
+        <g id="twB" style="transform-box:fill-box;transform-origin:center bottom" class="bb-move">
+          <circle class="atom" id="twCB" cx="345" cy="120" r="40"/>
+          <circle cx="334" cy="108" r="4" fill="var(--ink)"/><circle cx="356" cy="108" r="4" fill="var(--ink)"/>
+          <path d="M334 134 q11 8 22 0" stroke="var(--ink)" stroke-width="3" fill="none"/>
+          <circle cx="305" cy="120" r="8" fill="var(--atom)" stroke="var(--atom-line)" stroke-width="2.5"/>
+        </g>
+        <text x="55" y="186" text-anchor="middle" class="lbl">Atom A</text>
+        <text x="345" y="186" text-anchor="middle" class="lbl">Atom B</text>
+        <text id="twDA" x="55" y="62" class="bb-fade"></text>
+        <text id="twDB" x="345" y="62" class="bb-fade"></text>
+      </svg>
+    </div>
+    <div class="sliders">
+      <div>
+        <label for="enA">Atom A electronegativity: <span id="enAv">2.20</span></label>
+        <input type="range" id="enA" min="0.5" max="4" step="0.01" value="2.20">
+      </div>
+      <div>
+        <label for="enB">Atom B electronegativity: <span id="enBv">3.16</span></label>
+        <input type="range" id="enB" min="0.5" max="4" step="0.01" value="3.16">
+      </div>
+    </div>
+    <div class="presets" role="group" aria-label="Try these pairs">
+      <span style="align-self:center;font-weight:700">Try:</span>
+      <button type="button" data-a="2.20" data-b="2.20">H vs H</button>
+      <button type="button" data-a="2.20" data-b="3.16">H vs Cl</button>
+      <button type="button" data-a="2.20" data-b="3.44">H vs O</button>
+      <button type="button" data-a="0.93" data-b="3.16">Na vs Cl</button>
+    </div>
+    <div aria-live="polite" style="margin-top:14px">
+      <p class="calc" id="twCalc"></p>
+      <div class="verdict" id="twVerdict"></div>
+    </div>
+  </div>
+
+  <!-- Panel C -->
+  <div class="panel card" id="panel-C" hidden>
+    <h2>Molecule Gallery</h2>
+    <p>Click a molecule to see its structure. Polar bonds show δ+ and δ− labels.</p>
+    <div class="gallery" id="gallery" role="group" aria-label="Molecules"></div>
+    <div class="fig-box"><div id="molFig"></div></div>
+    <div aria-live="polite" id="molText" style="margin-top:12px"></div>
+  </div>
+
+  <!-- Panel D -->
+  <div class="panel card" id="panel-D" hidden>
+    <h2>Electronegativity Map</h2>
+    <p>Tap an element to see its atom. Laid out like the periodic table, the pull gets <strong>stronger across a row</strong> and <strong>weaker down a column</strong>.</p>
+    <div class="map-layout">
+      <div>
+        <div class="en-legend" aria-hidden="true">
+          <div class="en-legend-labels"><span>← weak pull</span><span>strong pull →</span></div>
+          <div class="en-legend-bar" id="enLegendBar"></div>
+          <div class="en-legend-ticks" id="enLegendTicks"></div>
+        </div>
+        <p class="sr-only">Colour scale: blue means a weak pull (about 0.8), cream is in the middle (about 2.2), and rust red means a strong pull (about 4.0).</p>
+        <div class="en-trend-x" aria-hidden="true">Across a row: pull increases →</div>
+        <div class="en-map-row">
+          <div class="en-trend-y" aria-hidden="true">Down a column: pull decreases →</div>
+          <div class="en-map" id="enMap" role="group" aria-label="Electronegativity map"></div>
+        </div>
+        <p class="ptable-note">Each tile shows +protons, symbol and electronegativity. Here, colours show <strong>pulling strength</strong>, not charge. Only some elements are shown.</p>
+      </div>
+      <div class="map-detail" id="enDetail" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="view" id="view-quiz" aria-labelledby="quiz-h" hidden>
+  <h1 id="quiz-h" style="font-size:1.6em">Quiz</h1>
+  <div class="card" id="quizBox"></div>
+  <p class="muted" style="font-size:.85em;margin-top:10px">Nothing is saved or sent anywhere. Your answers stay on this page only.</p>
+</section>
+
+</main>
+
+<footer>Created by ACMPro.in</footer>
+
+<!-- ================= TEACHER NOTES ================= -->
+<dialog class="teacher" id="teacherDlg" aria-labelledby="tTitle">
+  <div class="t-head">
+    <div><span class="tag">Teacher reference · not part of the student lesson</span><h2 id="tTitle">Teacher Notes: Polar &amp; Non-polar Covalent Bonds</h2></div>
+    <button type="button" id="teacherClose" aria-label="Close teacher notes">✕ Close</button>
+  </div>
+  <div class="t-body">
+    <h3>a. Where this sits in the syllabus</h3>
+    <p>This page treats polarity at a <strong>Class 8 foundational level</strong>: sharing of electrons, the idea of electronegativity as a “pull”, partial charges (δ+ / δ−), and a simple ΔEN rule of thumb. It builds on the Class 8 ideas of atomic structure, valence electrons and the duplet/octet rule.</p>
+    <p>The <strong>formal and deeper treatment comes in ICSE Classes 9 and 10</strong>: chemical bonding in detail (electrovalent, covalent and coordinate bonds, properties of ionic and covalent compounds), periodic properties and their trends (including electronegativity), and — beyond that — bond energies and molecular geometry (VSEPR). These are deliberately <em>not</em> taught here. Please check the exact wording against your school’s current CISCE syllabus and textbook.</p>
+
+    <h3>b. Refresher: electronegativity trends (teacher background)</h3>
+    <ul>
+      <li><strong>Across a period (left → right): increases.</strong> Nuclear charge rises while electrons are added to the same shell, so the nucleus pulls bonding electrons more strongly. Period 2 from this page: Li 0.98 → C 2.55 → N 3.04 → O 3.44 → F 3.98.</li>
+      <li><strong>Down a group: decreases.</strong> Extra shells put the bonding electrons further from the nucleus and shield them. Group 17: F 3.98 &gt; Cl 3.16 &gt; Br 2.96 &gt; I 2.66. Group 1: Li 0.98 &gt; Na 0.93 &gt; K 0.82.</li>
+      <li>The <strong>Electronegativity Map</strong> (Explore → D) shows both trends at once and links them to proton count, shell distance and shielding.</li>
+      <li>Fluorine is the most electronegative element. Metals (left side) have low values; non-metals (top right) have high values.</li>
+      <li>Values used here are on the <strong>Pauling scale</strong> and have no unit. Noble gases are usually left out because they rarely form bonds.</li>
+    </ul>
+
+    <h3>c. Common misconceptions to watch for</h3>
+    <ul>
+      <li><strong>“Polar bond” vs “polar molecule”.</strong> A molecule can contain polar bonds and still be non-polar overall if the pulls cancel (CO<sub>2</sub>). Whether they cancel depends on the <em>shape</em> of the molecule. Only foreshadow this — shape is a Class 9/10+ idea, which is why CO<sub>2</sub> is a “Challenge” slide and not core content.</li>
+      <li><strong>δ charges are not full charges.</strong> δ+ and δ− are partial charges; the molecule as a whole is still neutral. Students often write H<sup>+</sup>Cl<sup>−</sup> for the HCl molecule.</li>
+      <li><strong>“Polar” is not the same as “ionic”.</strong> In a polar bond the electrons are still shared, just unevenly. Nothing is fully transferred.</li>
+      <li><strong>Electronegativity is not the number of electrons</strong>, nor the charge of an ion, nor the atom’s size. It is a tendency to attract <em>shared</em> electrons in a bond.</li>
+      <li><strong>“Non-polar means ΔEN must be exactly zero.”</strong> C–H (ΔEN 0.35) is very slightly uneven but is treated as non-polar.</li>
+      <li><strong>Oil floats because it is non-polar.</strong> Not quite: oil and water <em>don’t mix</em> because of polarity; oil is on <em>top</em> because it is less dense. Two separate ideas.</li>
+    </ul>
+
+    <h3>d. Extra discussion questions and analogies</h3>
+    <ul>
+      <li><strong>Sharing a blanket:</strong> two siblings share one blanket on a cold night. If one pulls harder, the blanket ends up mostly on their side — but they are still sharing it (polar covalent). If one takes it completely, that is like ionic bonding.</li>
+      <li><strong>Magnets and a paperclip:</strong> place a paperclip between a strong and a weak magnet. Where does it end up? Link “stronger magnet” to “higher electronegativity”.</li>
+      <li><strong>Charged comb demonstration:</strong> rub a plastic comb on dry hair and bring it near a thin, steady stream of tap water. The stream bends. Ask: “What does this tell us about water?” (Water molecules have δ+ and δ− ends.)</li>
+      <li><strong>Discussion:</strong> “Why do we need soap to wash oil off our hands, when water alone doesn’t work?” Let students reason from “oil is non-polar, water is polar”. (Soap has one end that likes water and one that likes oil — no need to go further.)</li>
+    </ul>
+
+    <h3>e. About the ΔEN rule of thumb (0.4 and 1.7)</h3>
+    <p>The cut-offs are a <strong>teaching simplification, not a scientific boundary</strong>. Bonding character is a <strong>continuum</strong>: as ΔEN grows, bonds become gradually more polar and then more ionic in character; there is no sudden jump at 0.4 or 1.7. Different textbooks use different cut-offs (for example 0.5 and 2.0, or 1.7–1.9). Known exceptions students may find in the Bond Builder:</p>
+    <ul>
+      <li><strong>H–F</strong> (3.98 − 2.20 = 1.78) and <strong>P–F</strong> (1.79) are just above 1.7, yet they are covalent (very polar) bonds between non-metals. The Bond Builder labels these as exceptions.</li>
+      <li>Some <strong>metal + non-metal</strong> pairs have ΔEN below 1.7 (e.g. Li–I 1.68, Na–H 1.27, Na–S 1.65), yet their real compounds are ionic. The Bond Builder shows a “real-life check” note for these.</li>
+      <li>Two metals (e.g. Na–K) join by metallic bonding, which the rule does not describe.</li>
+    </ul>
+    <p>A good classroom rule at this level: <em>metal + non-metal → usually ionic; non-metal + non-metal → covalent, then use ΔEN to judge polar or non-polar.</em></p>
+
+    <h3>f. “If a student asks…”</h3>
+    <dl>
+      <dt>“Why does fluorine pull the hardest?”</dt>
+      <dd>“It has a small atom with a strong pull from its nucleus on the outer electrons. You’ll learn exactly why when you study the periodic table in Class 9.”</dd>
+      <dt>“If CO<sub>2</sub> has polar bonds, why isn’t it polar? Is water’s shape why it’s polar?”</dt>
+      <dd>“Yes — shape matters. CO<sub>2</sub> is a straight line so the pulls cancel; water is bent so they don’t. You’ll learn how to predict shapes in higher classes.”</dd>
+      <dt>“Where do the electronegativity numbers come from?”</dt>
+      <dd>“A scientist called Linus Pauling worked them out from measurements of how strong bonds are. They are a comparison scale, so they have no unit.”</dd>
+      <dt>“Is there a bond that is exactly half ionic?”</dt>
+      <dd>“Great question! Bonds change gradually from non-polar to polar to ionic. The numbers 0.4 and 1.7 are just a handy guide — scientists see it as a sliding scale.”</dd>
+    </dl>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Data ---------- */
+  var EN = { H: 2.20, C: 2.55, N: 3.04, O: 3.44, F: 3.98, Cl: 3.16, Br: 2.96, I: 2.66, S: 2.58, P: 2.19, Na: 0.93, K: 0.82, Mg: 1.31, Li: 0.98 };
+  var NAMES = { H: "Hydrogen", C: "Carbon", N: "Nitrogen", O: "Oxygen", F: "Fluorine", Cl: "Chlorine", Br: "Bromine", I: "Iodine", S: "Sulphur", P: "Phosphorus", Na: "Sodium", K: "Potassium", Mg: "Magnesium", Li: "Lithium" };
+  var METALS = { Na: 1, K: 1, Mg: 1, Li: 1 };
+  // [symbol, row, column] – columns stand for groups 1, 2, 14, 15, 16, 17
+  var LAYOUT = [["H",1,1],["Li",2,1],["C",2,3],["N",2,4],["O",2,5],["F",2,6],["Na",3,1],["Mg",3,2],["P",3,4],["S",3,5],["Cl",3,6],["K",4,1],["Br",4,6],["I",5,6]];
+
+  function h(n) { return Math.round(n * 100); }                // to hundredths (avoids floating-point errors)
+  function f2(n100) { return (n100 / 100).toFixed(2); }
+  function classify(d100) { return d100 < 40 ? "nonpolar" : (d100 <= 170 ? "polar" : "ionic"); }
+  var MINUS = "−";
+
+  /* ---------- Theme ---------- */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("themeBtn");
+  function isDark() {
+    var t = root.getAttribute("data-theme");
+    if (t) return t === "dark";
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function syncThemeBtn() {
+    var d = isDark();
+    themeBtn.setAttribute("aria-label", d ? "Switch to light mode" : "Switch to dark mode");
+    themeBtn.innerHTML = d
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></g></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>';
+  }
+  themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncThemeBtn(); if (atomRedraw) atomRedraw(false); });
+  syncThemeBtn();
+
+  /* ---------- Main navigation ---------- */
+  var navBtns = document.querySelectorAll("nav.main button");
+  var current = "learn";
+  function showView(name) {
+    current = name;
+    ["learn", "explore", "quiz"].forEach(function (v) { document.getElementById("view-" + v).hidden = v !== name; });
+    navBtns.forEach(function (b) { if (b.dataset.view === name) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+    window.scrollTo(0, 0);
+    if (name === "learn" && typeof atomRedraw === "function") atomRedraw(true);
+  }
+  navBtns.forEach(function (b) { b.addEventListener("click", function () { showView(b.dataset.view); }); });
+
+  /* ---------- SVG helpers for slides ---------- */
+  function pair(x, y) { // dot (one atom's electron) + cross (the other atom's electron)
+    return '<circle class="edot" cx="' + x + '" cy="' + (y - 9) + '" r="6"/><path class="ecross" d="M' + (x - 6) + ' ' + (y + 3) + ' l12 12 M' + (x + 6) + ' ' + (y + 3) + ' l-12 12"/>';
+  }
+  function atom(x, y, r, s, cls) {
+    return '<circle class="atom ' + (cls || "") + '" cx="' + x + '" cy="' + y + '" r="' + r + '"/><text class="sym" x="' + x + '" y="' + y + '">' + s + "</text>";
+  }
+  function arrowR(x1, x2, y) { return '<line class="arrow" x1="' + x1 + '" y1="' + y + '" x2="' + (x2 - 10) + '" y2="' + y + '"/><path class="arrowhead" d="M' + x2 + " " + y + " l-12 -7 v14 z\"/>"; }
+  function arrowL(x1, x2, y) { return '<line class="arrow" x1="' + x1 + '" y1="' + y + '" x2="' + (x2 + 10) + '" y2="' + y + '"/><path class="arrowhead" d="M' + x2 + " " + y + " l12 -7 v14 z\"/>"; }
+  function svg(vb, label, inner) { return '<div class="fig-box"><svg class="fig" viewBox="' + vb + '" role="img" aria-label="' + label + '">' + inner + "</svg></div>"; }
+
+  /* ---------- Opening slide: 3D-style atom on canvas ---------- */
+  var atomRedraw = null; // set while the canvas is on screen; used after theme change / resize
+  function hexRgb(hx) {
+    hx = hx.trim().replace("#", "");
+    if (hx.length === 3) hx = hx.replace(/./g, "$&$&");
+    var n = parseInt(hx, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+  function startAtom3D() {
+    var cv = document.getElementById("atom3d");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var W = 360, H = 260, CX = 180, CY = 130, FOCAL = 650;
+    // Inner shell uses the δ+ colour, outer shell the δ− colour – here as a depth grade, not charge.
+    var shells = [
+      { R: 72, n: 2, key: "--pos", speed: 0.9, tx: 1.0, tz: 0.5, a0: 0.3 },
+      { R: 134, n: 6, key: "--neg", speed: 0.42, tx: 1.05, tz: -0.35, a0: 0 }
+    ];
+    // 8 protons: a back layer and a front layer, so the cluster looks round
+    var protons = [[-8, -8, 1], [8, -8, 1], [-8, 8, 1], [8, 8, 1], [0, -12, 0], [-12, 0, 0], [12, 0, 0], [0, 12, 0]];
+    function size() {
+      var w = cv.getBoundingClientRect().width;
+      if (!w) return;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(w * dpr); cv.height = Math.round(w * H / W * dpr);
+      ctx.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
+    }
+    function point(sh, a, phi) {
+      var x = sh.R * Math.cos(a), y = sh.R * Math.sin(a), z = 0, t;
+      t = y * Math.cos(sh.tx) - z * Math.sin(sh.tx); z = y * Math.sin(sh.tx) + z * Math.cos(sh.tx); y = t;   // tilt (X axis)
+      t = x * Math.cos(sh.tz) - y * Math.sin(sh.tz); y = x * Math.sin(sh.tz) + y * Math.cos(sh.tz); x = t;   // turn (Z axis)
+      t = x * Math.cos(phi) + z * Math.sin(phi); z = -x * Math.sin(phi) + z * Math.cos(phi); x = t;        // slow turn of whole atom (Y axis)
+      var s = FOCAL / (FOCAL + z);
+      return { x: CX + x * s, y: CY + y * s, z: z, s: s };
+    }
+    function sphere(x, y, r, light, mid, dark) {
+      var g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+      g.addColorStop(0, light); g.addColorStop(0.55, mid); g.addColorStop(1, dark);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+    function draw(t) {
+      var cs = getComputedStyle(document.documentElement);
+      var ink = hexRgb(cs.getPropertyValue("--ink")), surf = hexRgb(cs.getPropertyValue("--surface"));
+      var phi = Math.sin(t * 0.25) * 0.5;
+      ctx.clearRect(0, 0, W, H);
+      var rings = shells.map(function (sh) {
+        var col = hexRgb(cs.getPropertyValue(sh.key)), pts = [];
+        for (var i = 0; i <= 96; i++) pts.push(point(sh, i / 96 * Math.PI * 2, phi));
+        var els = [];
+        for (var k = 0; k < sh.n; k++) els.push(point(sh, sh.a0 + k * Math.PI * 2 / sh.n + t * sh.speed, phi));
+        return { sh: sh, col: col, pts: pts, els: els };
+      });
+      // 1. translucent shell discs, outer first, graded from the centre outwards
+      rings.slice().reverse().forEach(function (r) {
+        var g = ctx.createRadialGradient(CX, CY, 0, CX, CY, r.sh.R);
+        g.addColorStop(0, rgba(r.col, 0.04)); g.addColorStop(0.75, rgba(r.col, 0.12)); g.addColorStop(1, rgba(r.col, 0.26));
+        ctx.fillStyle = g; ctx.beginPath();
+        r.pts.forEach(function (p, i) { if (i) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y); });
+        ctx.closePath(); ctx.fill();
+      });
+      function ringHalf(r, front) {
+        ctx.strokeStyle = rgba(r.col, front ? 0.95 : 0.4); ctx.lineWidth = front ? 3 : 2;
+        ctx.beginPath();
+        for (var i = 1; i < r.pts.length; i++) {
+          var a = r.pts[i - 1], b = r.pts[i];
+          if ((a.z + b.z <= 0) === front) { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); }
+        }
+        ctx.stroke();
+      }
+      function electron(p, front) {
+        var r = 8 * p.s;
+        sphere(p.x, p.y, r, rgba(surf, front ? 1 : 0.7), rgba(ink, front ? 0.85 : 0.45), rgba(ink, front ? 1 : 0.55));
+      }
+      // 2. back half of each shell and electrons behind the nucleus
+      rings.forEach(function (r) { ringHalf(r, false); });
+      rings.forEach(function (r) { r.els.forEach(function (p) { if (p.z > 0) electron(p, false); }); });
+      // 3. nucleus: glow + 8 proton spheres marked "+"
+      var glow = ctx.createRadialGradient(CX, CY, 4, CX, CY, 40);
+      glow.addColorStop(0, "rgba(234,179,8,0.35)"); glow.addColorStop(1, "rgba(234,179,8,0)");
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(CX, CY, 40, 0, Math.PI * 2); ctx.fill();
+      ctx.font = "bold 11px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      protons.forEach(function (q) {
+        var x = CX + q[0], y = CY + q[1];
+        if (q[2]) sphere(x, y, 9.5, "#f5d97a", "#b8860b", "#6b4e05");
+        else sphere(x, y, 10, "#fff3c4", "#d4a017", "#8a6508");
+        ctx.fillStyle = q[2] ? "#fff8dc" : "#3b2a00"; ctx.fillText("+", x, y + 0.5);
+      });
+      // 4. front half of each shell and electrons in front
+      rings.forEach(function (r) { ringHalf(r, true); });
+      rings.forEach(function (r) { r.els.forEach(function (p) { if (p.z <= 0) electron(p, true); }); });
+    }
+    size();
+    var t0 = performance.now();
+    atomRedraw = function (resize) { if (resize) size(); if (reduceMotion) draw(1.2); };
+    if (reduceMotion) { draw(1.2); return; }
+    (function frame(now) {
+      if (!cv.isConnected) return; // slide changed: stop this loop
+      if (cv.offsetParent !== null && !document.hidden) draw((now - t0) / 1000);
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+  window.addEventListener("resize", function () { if (atomRedraw) atomRedraw(true); });
+
+  /* ---------- Slides ---------- */
+  var SLIDES = [
+    {
+      title: "Recap: why do atoms bond?",
+      body: "<ul><li>Every atom has a <strong>nucleus</strong> in the centre. <strong>Electrons</strong> move around it in <strong>shells</strong>.</li>" +
+        "<li>An atom is most <strong>stable</strong> when its outer shell is full: 2 electrons for the first shell (duplet), 8 for the outer shell of most other atoms (octet).</li>" +
+        "<li>Oxygen has electrons arranged as 2, 6. Its outer shell needs 2 more.</li>" +
+        "<li>To fill their outer shells, atoms join together. This link is called a <strong>chemical bond</strong>.</li></ul>",
+      fig: '<div class="fig-box"><canvas id="atom3d" class="atom3d" role="img" aria-label="A 3D-style oxygen atom. The nucleus holds 8 protons. 2 electrons spin in a small, see-through inner shell and 6 electrons spin in a larger outer shell."></canvas>' +
+        '<div class="a3-legend"><span><i class="a3-sw nuc"></i>Nucleus: 8 protons (+)</span><span><i class="a3-sw a3-el"></i>Electron</span>' +
+        '<span><i class="a3-sw a3-in"></i>Inner shell: 2 electrons</span><span><i class="a3-sw a3-out"></i>Outer shell: 6 (needs 8)</span></div>' +
+        '<p class="a3-note">Oxygen (2, 6). In this picture the colours show shell depth (inner → outer), not charge. Neutrons are not shown.</p></div>'
+    },
+    {
+      title: "A covalent bond means sharing",
+      body: "<ul><li>In a <strong>covalent bond</strong>, two atoms <strong>share a pair of electrons</strong>.</li>" +
+        "<li>Each atom gives <strong>one</strong> electron to the shared pair.</li>" +
+        "<li>Example: two hydrogen atoms share a pair to make H<sub>2</sub>. Now each H has 2 electrons nearby — a full shell.</li>" +
+        "<li>We draw one shared pair as a single line: <strong>H–H</strong>.</li></ul>" +
+        '<p class="note">In the diagrams, ● is one atom’s electron and × is the other atom’s electron.</p>',
+      fig: svg("0 0 400 230", "Two hydrogen atoms move together and share their two electrons as a pair between them.",
+        '<text class="lbl" x="200" y="30" text-anchor="middle" font-weight="700">H + H → H₂</text>' +
+        '<g class="a-inL"><circle class="atom" cx="160" cy="120" r="55" style="fill-opacity:.8"/><text class="sym" x="135" y="120">H</text></g>' +
+        '<g class="a-inR"><circle class="atom" cx="240" cy="120" r="55" style="fill-opacity:.8"/><text class="sym" x="265" y="120">H</text></g>' +
+        '<g class="a-inL"><circle class="edot" cx="200" cy="110" r="6"/></g><g class="a-inR"><path class="ecross" d="M194 124 l12 12 M206 124 l-12 12"/></g>' +
+        '<g class="a-fade"><line x1="200" y1="150" x2="200" y2="186" stroke="var(--muted)" stroke-width="2"/><text class="lbl" x="200" y="210" text-anchor="middle">shared pair</text></g>')
+    },
+    {
+      title: "Electronegativity: the pull on electrons",
+      body: "<ul><li><strong>Electronegativity</strong> is how strongly an atom <strong>pulls the shared electrons</strong> towards itself.</li>" +
+        "<li>Think of a <strong>tug-of-war</strong>. The shared pair is the flag in the middle of the rope.</li>" +
+        "<li>The atom with the <strong>higher</strong> electronegativity pulls <strong>harder</strong>.</li>" +
+        "<li>Some values: F = 3.98 (the strongest puller), O = 3.44, H = 2.20, Na = 0.93. These numbers have no unit.</li></ul>",
+      fig: svg("0 0 400 220", "A tug-of-war: the atom on the right pulls harder, so the electron-pair flag moves towards it.",
+        '<line x1="200" y1="40" x2="200" y2="170" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 6"/>' +
+        '<g class="a-sway"><line class="rope" x1="10" y1="115" x2="390" y2="115"/><line x1="200" y1="115" x2="200" y2="66" stroke="var(--ink)" stroke-width="3"/><path d="M200 66 L240 80 L200 94 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5"/><circle class="edot" cx="210" cy="80" r="4.5"/><path class="ecross" d="M218 76 l8 8 M226 76 l-8 8" style="stroke-width:2.5"/></g>' +
+        atom(55, 115, 36, "H") + atom(345, 115, 42, "Cl") +
+        '<text class="lbl-s" x="55" y="175" text-anchor="middle">2.20</text><text class="lbl-s" x="345" y="178" text-anchor="middle">3.16</text>' +
+        '<text class="lbl" x="8" y="205">weaker pull</text><text class="lbl" x="392" y="205" text-anchor="end">stronger pull</text>')
+    },
+    {
+      title: "Non-polar covalent bond: fair sharing",
+      body: "<ul><li>When both atoms pull <strong>equally</strong> (or almost equally), the shared pair stays in the <strong>middle</strong>.</li>" +
+        "<li>The electrons are shared <strong>evenly</strong>. Neither end becomes charged.</li>" +
+        "<li>This is a <strong>non-polar covalent bond</strong>.</li>" +
+        "<li>Examples: <strong>H–H</strong> (H<sub>2</sub>), <strong>Cl–Cl</strong> (Cl<sub>2</sub>), <strong>O=O</strong> (O<sub>2</sub>). In O<sub>2</sub> the atoms share <em>two</em> pairs — still evenly.</li></ul>",
+      fig: svg("0 0 400 220", "Two chlorine atoms pull equally, so the shared pair and the electron cloud stay exactly in the middle. No delta labels.",
+        '<ellipse class="cloud a-breathe" cx="200" cy="110" rx="170" ry="62" style="fill-opacity:.2"/>' +
+        atom(115, 110, 46, "Cl") + atom(285, 110, 46, "Cl") + pair(200, 106) +
+        '<g class="a-pulse">' + arrowL(180, 150, 160) + arrowR(220, 250, 160) + "</g>" +
+        '<text class="lbl-s" x="115" y="180" text-anchor="middle">3.16</text><text class="lbl-s" x="285" y="180" text-anchor="middle">3.16</text>' +
+        '<text class="lbl" x="200" y="30" text-anchor="middle" font-weight="700">Equal pull → pair stays in the middle</text>' +
+        '<text class="lbl" x="200" y="210" text-anchor="middle">no δ+ or δ−</text>')
+    },
+    {
+      title: "Polar covalent bond: unequal sharing",
+      body: "<ul><li>When one atom pulls <strong>harder</strong>, the shared pair <strong>shifts towards it</strong>.</li>" +
+        '<li>That atom becomes <strong>partly negative</strong>: we write <span class="neg">δ−</span> (“delta minus”).</li>' +
+        '<li>The other atom becomes <strong>partly positive</strong>: <span class="pos">δ+</span> (“delta plus”).</li>' +
+        "<li>δ means “a small part”. These are small charges, not full ones.</li>" +
+        "<li>Examples: <strong>H–Cl</strong>, and the <strong>O–H</strong> bonds in water.</li></ul>",
+      fig: svg("0 0 400 220", "In H–Cl, the shared pair slides towards chlorine. Chlorine is labelled delta minus and hydrogen delta plus.",
+        '<defs><linearGradient id="gHCl" x1="0" x2="1"><stop offset="0" stop-color="var(--cloud)" stop-opacity=".06"/><stop offset="1" stop-color="var(--cloud)" stop-opacity=".45"/></linearGradient></defs>' +
+        '<ellipse cx="200" cy="112" rx="170" ry="62" fill="url(#gHCl)"/>' +
+        atom(110, 112, 34, "H", "p") + atom(285, 112, 48, "Cl", "n") +
+        '<g class="a-shift35">' + pair(190, 108) + "</g>" +
+        '<g class="a-fade"><text class="dlabel-p" x="110" y="62">δ+</text><text class="dlabel-n" x="285" y="50">δ−</text></g>' +
+        '<text class="lbl-s" x="110" y="170" text-anchor="middle">2.20</text><text class="lbl-s" x="285" y="184" text-anchor="middle">3.16</text>' +
+        '<text class="lbl" x="200" y="212" text-anchor="middle">pair shifts towards Cl</text>')
+    },
+    {
+      title: "How to decide: ΔEN",
+      body: "<p>Find the <strong>difference in electronegativity</strong>:</p><p><strong>ΔEN = bigger value − smaller value</strong></p>" +
+        '<p>Then use this <strong>rule of thumb</strong>:</p><div class="tbl-scroll"><table class="rule"><tr><th>ΔEN</th><th>Type of bond</th></tr>' +
+        "<tr><td>less than 0.4</td><td>Non-polar covalent</td></tr><tr><td>0.4 to 1.7</td><td>Polar covalent</td></tr><tr><td>more than 1.7</td><td>Mostly ionic (electrons transferred, not shared)</td></tr></table></div>" +
+        '<p class="note">A rule of thumb is a handy guide, not an exact law. Real bonds change little by little, so values near 0.4 or 1.7 are a bit fuzzy.</p>',
+      fig: svg("0 0 400 200", "A ΔEN scale from 0 to 3.5 split into non-polar (below 0.4), polar (0.4 to 1.7) and ionic (above 1.7). A needle sweeps along it.",
+        '<text class="lbl" x="20" y="60" font-weight="700">Non-polar</text><text class="lbl" x="128" y="84" text-anchor="middle" font-weight="700">Polar</text><text class="lbl" x="288" y="84" text-anchor="middle" font-weight="700">Ionic</text>' +
+        '<rect x="20" y="96" width="41" height="34" fill="var(--z1)" stroke="var(--ink)" stroke-width="2"/><rect x="61" y="96" width="134" height="34" fill="var(--z2)" stroke="var(--ink)" stroke-width="2"/><rect x="195" y="96" width="185" height="34" fill="var(--z3)" stroke="var(--ink)" stroke-width="2"/>' +
+        '<text class="lbl-s" x="20" y="154" text-anchor="middle">0</text><text class="lbl-s" x="61" y="154" text-anchor="middle">0.4</text><text class="lbl-s" x="195" y="154" text-anchor="middle">1.7</text><text class="lbl-s" x="380" y="154" text-anchor="middle">3.5</text>' +
+        '<text class="lbl" x="200" y="190" text-anchor="middle">ΔEN →</text>' +
+        '<g class="a-sweep"><line x1="30" y1="88" x2="30" y2="138" stroke="var(--ink)" stroke-width="4"/><path d="M30 94 l-9 -12 h18 z" fill="var(--ink)"/></g>')
+    },
+    {
+      title: "Worked examples",
+      body: '<div class="tbl-scroll"><table class="rule"><tr><th>Bond</th><th>Calculation</th><th>Result</th></tr>' +
+        "<tr><td>H–H</td><td>2.20 − 2.20 = 0.00</td><td>Non-polar</td></tr>" +
+        "<tr><td>C–H</td><td>2.55 − 2.20 = 0.35</td><td>Non-polar (by the rule of thumb)</td></tr>" +
+        '<tr><td>H–Cl</td><td>3.16 − 2.20 = 0.96</td><td>Polar: H <span class="pos">δ+</span>, Cl <span class="neg">δ−</span></td></tr>' +
+        '<tr><td>O–H</td><td>3.44 − 2.20 = 1.24</td><td>Polar: O <span class="neg">δ−</span>, H <span class="pos">δ+</span></td></tr>' +
+        "<tr><td>Na–Cl</td><td>3.16 − 0.93 = 2.23</td><td>Ionic</td></tr></table></div>" +
+        '<p class="note">C–H is very slightly uneven, but 0.35 is less than 0.4, so we call it non-polar.</p>',
+      fig: svg("0 0 400 215", "The five worked examples placed on the ΔEN scale: H–H at 0, C–H at 0.35, H–Cl at 0.96, O–H at 1.24, and Na–Cl at 2.23.",
+        '<rect x="20" y="95" width="57.6" height="26" fill="var(--z1)" stroke="var(--ink)" stroke-width="2"/><rect x="77.6" y="95" width="187.2" height="26" fill="var(--z2)" stroke="var(--ink)" stroke-width="2"/><rect x="264.8" y="95" width="115.2" height="26" fill="var(--z3)" stroke="var(--ink)" stroke-width="2"/>' +
+        [["H–H", 0, 1, 1], ["C–H", 0.35, 0, 2], ["H–Cl", 0.96, 1, 3], ["O–H", 1.24, 0, 4], ["Na–Cl", 2.23, 1, 5]].map(function (m) {
+          var x = 20 + m[1] * 144, up = m[2];
+          var anchor = m[1] === 0 ? "start" : "middle";
+          return '<g class="a-fade' + m[3] + '"><line x1="' + x + '" y1="' + (up ? 70 : 121) + '" x2="' + x + '" y2="' + (up ? 95 : 146) + '" stroke="var(--ink)" stroke-width="3"/><circle cx="' + x + '" cy="108" r="6" fill="var(--ink)"/>' +
+            '<text class="lbl" x="' + x + '" y="' + (up ? 42 : 168) + '" text-anchor="' + anchor + '" font-weight="700">' + m[0] + '</text><text class="lbl-s" x="' + x + '" y="' + (up ? 62 : 188) + '" text-anchor="' + anchor + '">' + m[1].toFixed(2) + "</text></g>";
+        }).join("") +
+        '<text style="font-size:15px" x="20" y="210">non-polar</text><text style="font-size:15px" x="171" y="210" text-anchor="middle">polar</text><text style="font-size:15px" x="322" y="210" text-anchor="middle">ionic</text>')
+    },
+    {
+      title: "Real life: water and oil",
+      body: '<ul><li>Water (H<sub>2</sub>O) has two <strong>polar</strong> O–H bonds. The O end is <span class="neg">δ−</span> and the H ends are <span class="pos">δ+</span>.</li>' +
+        "<li>So water molecules <strong>attract each other</strong>: the δ+ H of one molecule is pulled towards the δ− O of the next.</li>" +
+        "<li>Oil is made of <strong>non-polar</strong> molecules. They have no δ+ or δ− ends for water to attract.</li>" +
+        "<li>Water molecules stick to each other and squeeze the oil out. So <strong>oil and water do not mix</strong>. (Oil floats on top because it is lighter.)</li></ul>",
+      fig: svg("0 0 400 230", "A water molecule with oxygen delta minus and both hydrogens delta plus. Next to it, a beaker where oil drops rise and form a separate layer on top of the water.",
+        atom(95, 100, 30, "O", "n") + atom(48, 158, 21, "H", "p") + atom(142, 158, 21, "H", "p") +
+        '<line class="bondline" x1="78" y1="123" x2="60" y2="143"/><line class="bondline" x1="112" y1="123" x2="130" y2="143"/>' +
+        '<text class="dlabel-n" x="95" y="58">δ−</text><text class="dlabel-p" x="22" y="206">δ+</text><text class="dlabel-p" x="168" y="206">δ+</text>' +
+        '<text class="lbl" x="95" y="226" text-anchor="middle">water: polar</text>' +
+        '<path d="M225 40 v170 h140 v-170" fill="none" stroke="var(--ink)" stroke-width="3"/>' +
+        '<rect x="227" y="102" width="136" height="106" fill="var(--water)" opacity=".7"/>' +
+        '<rect x="227" y="70" width="136" height="32" fill="var(--oil)" opacity=".85"/>' +
+        '<g class="a-rise"><circle cx="265" cy="190" r="8" fill="var(--oil)" stroke="var(--ink)" stroke-width="1.5"/></g>' +
+        '<g class="a-rise" style="animation-delay:1.3s"><circle cx="320" cy="195" r="6" fill="var(--oil)" stroke="var(--ink)" stroke-width="1.5"/></g>' +
+        '<g class="a-rise" style="animation-delay:2.6s"><circle cx="295" cy="185" r="7" fill="var(--oil)" stroke="var(--ink)" stroke-width="1.5"/></g>' +
+        '<text x="295" y="92" text-anchor="middle" style="font-size:17px;font-weight:700;fill:#1f1a00">oil</text>' +
+        '<text class="lbl" x="295" y="150" text-anchor="middle" font-weight="700">water</text>' +
+        '<text class="lbl-s" x="295" y="30" text-anchor="middle">they stay apart</text>')
+    },
+    {
+      title: "Summary",
+      body: "<ol><li>Atoms bond to become <strong>stable</strong>. In a <strong>covalent bond</strong> they <strong>share a pair of electrons</strong>.</li>" +
+        "<li><strong>Electronegativity</strong> = how strongly an atom pulls shared electrons.</li>" +
+        "<li><strong>Equal pull → non-polar covalent</strong> bond (H<sub>2</sub>, Cl<sub>2</sub>, O<sub>2</sub>).</li>" +
+        '<li><strong>Unequal pull → polar covalent</strong> bond, with <span class="pos">δ+</span> and <span class="neg">δ−</span> ends (HCl, H<sub>2</sub>O).</li>' +
+        "<li>Rule of thumb for ΔEN: <strong>below 0.4</strong> non-polar, <strong>0.4 to 1.7</strong> polar, <strong>above 1.7</strong> mostly ionic.</li></ol>",
+      fig: svg("0 0 400 225", "Three bonds, one per row: non-polar H–H with the pair in the middle, polar H–Cl with the pair shifted towards Cl, and ionic Na–Cl with the electrons moved completely onto Cl.",
+        // non-polar
+        atom(60, 45, 24, "H") + atom(150, 45, 24, "H") + pair(105, 41) +
+        '<text class="lbl" x="228" y="40" font-weight="700">Non-polar</text><text class="lbl-s" x="228" y="62">shared evenly</text>' +
+        // polar
+        atom(60, 118, 22, "H", "p") + atom(150, 118, 27, "Cl", "n") + '<g class="a-shift12">' + pair(105, 114) + "</g>" +
+        '<text class="dlabel-p" x="20" y="126" style="font-size:20px">δ+</text><text class="dlabel-n" x="197" y="126" style="font-size:20px">δ−</text>' +
+        '<text class="lbl" x="228" y="113" font-weight="700">Polar</text><text class="lbl-s" x="228" y="135">shared unevenly</text>' +
+        // ionic
+        atom(60, 191, 24, "Na", "p") + atom(167, 191, 28, "Cl", "n") + '<g class="a-jump">' + pair(133, 187) + "</g>" +
+        '<text class="dlabel-p" x="20" y="199" style="font-size:22px">+</text><text class="dlabel-n" x="211" y="199" style="font-size:22px">−</text>' +
+        '<text class="lbl" x="228" y="186" font-weight="700">Ionic</text><text class="lbl-s" x="228" y="208">transferred</text>')
+    },
+    {
+      title: "Challenge: CO₂",
+      challenge: true,
+      body: '<p><span class="pill challenge-pill">Challenge / beyond the syllabus</span></p>' +
+        '<ul><li>Each C=O bond is <strong>polar</strong>: 3.44 − 2.55 = 0.89. The O atoms are <span class="neg">δ−</span> and the C is <span class="pos">δ+</span>.</li>' +
+        "<li>But a CO<sub>2</sub> molecule is a <strong>straight line</strong>: O=C=O.</li>" +
+        "<li>The two O atoms pull <strong>equally hard in opposite directions</strong>. The pulls <strong>cancel out</strong>.</li>" +
+        "<li>So the whole CO<sub>2</sub> molecule is <strong>non-polar</strong>, even though its bonds are polar!</li></ul>" +
+        '<p class="note">Big idea for later classes: the <strong>shape</strong> of a molecule matters too.</p>',
+      fig: svg("0 0 400 220", "Carbon dioxide, O=C=O, in a straight line. Both oxygens are delta minus and carbon is delta plus. Two equal arrows point outwards in opposite directions and cancel.",
+        '<line class="bondline" x1="122" y1="102" x2="168" y2="102"/><line class="bondline" x1="122" y1="116" x2="168" y2="116"/>' +
+        '<line class="bondline" x1="232" y1="102" x2="278" y2="102"/><line class="bondline" x1="232" y1="116" x2="278" y2="116"/>' +
+        atom(90, 109, 32, "O", "n") + atom(200, 109, 32, "C", "p") + atom(310, 109, 32, "O", "n") +
+        '<text class="dlabel-n" x="90" y="62">δ−</text><text class="dlabel-p" x="200" y="62">δ+</text><text class="dlabel-n" x="310" y="62">δ−</text>' +
+        '<g class="a-push" style="--dx:-8px">' + arrowL(185, 95, 172) + "</g>" +
+        '<g class="a-push" style="--dx:8px">' + arrowR(215, 305, 172) + "</g>" +
+        '<text class="lbl" x="200" y="210" text-anchor="middle" font-weight="700">equal and opposite pulls cancel</text>')
+    }
+  ];
+
+  var slideIdx = 0;
+  var slideEl = document.getElementById("slide");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var progFill = document.getElementById("progFill");
+  var progLabel = document.getElementById("progLabel");
+  var progBar = document.querySelector(".progress");
+
+  function renderSlide() {
+    var s = SLIDES[slideIdx];
+    slideEl.innerHTML = '<div class="slide"><div><h2>' + (slideIdx + 1) + ". " + s.title + "</h2>" + s.body + "</div><div>" + s.fig + "</div></div>";
+    progFill.style.width = ((slideIdx + 1) / SLIDES.length * 100) + "%";
+    progLabel.textContent = "Slide " + (slideIdx + 1) + " of " + SLIDES.length;
+    progBar.setAttribute("aria-valuenow", String(slideIdx + 1));
+    prevBtn.disabled = slideIdx === 0;
+    nextBtn.textContent = slideIdx === SLIDES.length - 1 ? "Go to Explore →" : "Next →";
+    atomRedraw = null;
+    if (slideIdx === 0) startAtom3D();
+  }
+  function goSlide(d) {
+    var n = slideIdx + d;
+    if (n < 0) return;
+    if (n >= SLIDES.length) { if (d > 0) showView("explore"); return; }
+    slideIdx = n; renderSlide();
+  }
+  prevBtn.addEventListener("click", function () { goSlide(-1); });
+  nextBtn.addEventListener("click", function () { goSlide(1); });
+  document.getElementById("progFill").parentNode.setAttribute("aria-valuemax", String(SLIDES.length));
+
+  document.addEventListener("keydown", function (e) {
+    if (current !== "learn" || teacherDlg.open) return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (t && t.isContentEditable)) return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); if (slideIdx < SLIDES.length - 1) goSlide(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); goSlide(-1); }
+  });
+
+  /* ---------- Explore sub-panels ---------- */
+  var subBtns = document.querySelectorAll(".subnav button");
+  subBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      subBtns.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      ["A", "B", "C", "D"].forEach(function (p) { document.getElementById("panel-" + p).hidden = p !== b.dataset.panel; });
+    });
+  });
+
+  /* ---------- Panel A: Bond Builder ---------- */
+  var sel = [ "H", "Cl" ];
+  function buildPicker(el, which) {
+    var cells = [];
+    for (var r = 1; r <= 5; r++) for (var c = 1; c <= 6; c++) cells.push(null);
+    LAYOUT.forEach(function (l) { cells[(l[1] - 1) * 6 + (l[2] - 1)] = l[0]; });
+    el.innerHTML = cells.map(function (s) {
+      if (!s) return '<span class="gap" aria-hidden="true"></span>';
+      return '<button type="button" class="el' + (METALS[s] ? " metal" : "") + '" data-s="' + s + '" aria-pressed="false" aria-label="' + NAMES[s] + (METALS[s] ? ", metal" : "") + ", electronegativity " + EN[s].toFixed(2) + '"><b>' + s + "</b><span>" + EN[s].toFixed(2) + "</span></button>";
+    }).join("");
+    el.addEventListener("click", function (e) {
+      var b = e.target.closest("button.el"); if (!b) return;
+      sel[which] = b.dataset.s; updateBuilder();
+    });
+  }
+  var p1 = document.getElementById("picker1"), p2 = document.getElementById("picker2");
+  buildPicker(p1, 0); buildPicker(p2, 1);
+
+  var bb = {
+    a1: document.getElementById("bbA1"), a2: document.getElementById("bbA2"),
+    c1: document.getElementById("bbC1"), c2: document.getElementById("bbC2"),
+    s1: document.getElementById("bbS1"), s2: document.getElementById("bbS2"),
+    d1: document.getElementById("bbD1"), d2: document.getElementById("bbD2"),
+    pair: document.getElementById("bbPair"), cloud: document.getElementById("bbCloud"),
+    stopL: document.getElementById("bbStopL"), stopR: document.getElementById("bbStopR"),
+    needle: document.getElementById("bbNeedle"), calc: document.getElementById("bbCalc"),
+    verdict: document.getElementById("bbVerdict"), warn: document.getElementById("bbWarn")
+  };
+  function setDelta(el, kind) {
+    el.textContent = kind === "n" ? "δ−" : kind === "p" ? "δ+" : kind === "N" ? "− (negative ion)" : kind === "P" ? "+ (positive ion)" : "";
+    el.setAttribute("class", "bb-fade " + (kind === "n" || kind === "N" ? "dlabel-n" : kind === "p" || kind === "P" ? "dlabel-p" : ""));
+    if (kind === "N" || kind === "P") el.style.fontSize = "19px"; else el.style.fontSize = "";
+    el.style.opacity = kind ? "1" : "0";
+  }
+  function updateBuilder() {
+    var A = sel[0], B = sel[1];
+    [p1, p2].forEach(function (p, i) {
+      p.querySelectorAll("button.el").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.s === sel[i])); });
+    });
+    var ea = h(EN[A]), eb = h(EN[B]);
+    var hi = Math.max(ea, eb), lo = Math.min(ea, eb), d = hi - lo;
+    var cls = classify(d);
+    var mA = !!METALS[A], mB = !!METALS[B];
+    var bothMetal = mA && mB, bothNon = !mA && !mB, mixed = !bothMetal && !bothNon;
+    var mode = cls;
+    if (cls === "ionic" && bothNon) mode = "verypolar";
+    var dir = eb > ea ? 1 : (ea > eb ? -1 : 0); // +1: pair moves right towards Atom 2
+
+    bb.s1.textContent = A; bb.s2.textContent = B;
+        var shift = 0, spread = 0;
+    if (mode === "ionic") { shift = dir * 70; spread = 14; }
+    else shift = dir * Math.min(d / 170, 1) * 58;
+    bb.pair.style.transform = "translateX(" + shift + "px)";
+    bb.a1.style.transform = "translateX(" + (-spread) + "px)";
+    bb.a2.style.transform = "translateX(" + spread + "px)";
+
+    // Electron cloud: darker on the δ− side
+    var t = Math.min(d / 170, 1);
+    var strong = (0.22 + 0.33 * t).toFixed(2), weak = (0.22 - 0.16 * t).toFixed(2);
+    if (dir === 0) { strong = weak = "0.22"; }
+    bb.stopL.setAttribute("stop-opacity", dir > 0 ? weak : strong);
+    bb.stopR.setAttribute("stop-opacity", dir > 0 ? strong : weak);
+    bb.cloud.style.opacity = mode === "ionic" ? "0" : "1";
+
+    var negIs = dir > 0 ? 2 : 1;
+    var c1 = "atom", c2 = "atom", k1 = "", k2 = "";
+    if (dir !== 0 && mode !== "nonpolar") {
+      var big = mode === "ionic";
+      if (negIs === 2) { c2 += " n"; c1 += " p"; k2 = big ? "N" : "n"; k1 = big ? "P" : "p"; }
+      else { c1 += " n"; c2 += " p"; k1 = big ? "N" : "n"; k2 = big ? "P" : "p"; }
+    }
+    bb.c1.setAttribute("class", c1); bb.c2.setAttribute("class", c2);
+    setDelta(bb.d1, k1); setDelta(bb.d2, k2);
+
+    // Meter (0 – 3.5 scale)
+    bb.needle.style.left = Math.min(d / 350 * 100, 100) + "%";
+
+    var hiS = ea >= eb ? A : B, loS = ea >= eb ? B : A;
+    var names = { nonpolar: "Non-polar covalent bond", polar: "Polar covalent bond", ionic: "Mostly ionic (not covalent)", verypolar: "Very polar covalent bond (an exception!)" };
+    bb.calc.textContent = f2(hi) + " " + MINUS + " " + f2(lo) + " = " + f2(d) + " → " + (bothMetal ? "Two metals (see note)" : names[mode]);
+
+    var v;
+    if (mode === "nonpolar") {
+      v = d === 0 ? "Both atoms have the same electronegativity (" + f2(hi) + "), so they pull <strong>equally</strong>. The pair stays in the middle. No δ+ or δ−."
+        : "ΔEN is less than 0.4, so the pull is <strong>almost equal</strong>. The pair moves only a tiny bit, and by the rule of thumb we call it non-polar. No δ+ or δ− labels.";
+    } else if (mode === "polar") {
+      v = "<strong>" + NAMES[hiS] + "</strong> pulls harder (" + f2(hi) + " vs " + f2(lo) + "), so the shared pair shifts towards " + hiS + '. ' + hiS + ' becomes <span class="neg">δ−</span> and ' + loS + ' becomes <span class="pos">δ+</span>.';
+    } else if (mode === "ionic") {
+      v = "ΔEN is <strong>greater than 1.7</strong>. The electron moves <strong>completely across</strong> from " + loS + " to " + hiS + ". <strong>This is ionic, not covalent</strong>: electrons are transferred, not shared. " + loS + ' becomes a <span class="pos">positive ion (+)</span> and ' + hiS + ' a <span class="neg">negative ion (−)</span>.';
+    } else {
+      v = hiS + " pulls much harder, so the pair shifts a long way towards it: " + hiS + ' is <span class="neg">δ−</span> and ' + loS + ' is <span class="pos">δ+</span>.';
+    }
+    bb.verdict.innerHTML = v;
+
+    var w = "";
+    if (mode === "verypolar") {
+      w = "<strong>Exception!</strong> ΔEN (" + f2(d) + ") is just above 1.7, so the rule of thumb says “mostly ionic”. But " + A + " and " + B + " are both <strong>non-metals</strong>, and this bond is really a <strong>very polar covalent</strong> bond — the electrons are still shared. This is why we call it a rule of thumb.";
+    } else if (bothMetal) {
+      w = "<strong>Note:</strong> " + (A === B ? A + " is a metal" : A + " and " + B + " are both metals") + ". Metals join by a different kind of bonding (metallic bonding), so this rule of thumb doesn’t really apply here.";
+    } else if (mixed && mode !== "ionic") {
+      var m = mA ? A : B, nm = mA ? B : A;
+      w = "<strong>Real-life check:</strong> " + m + " is a metal and " + nm + " is a non-metal. Compounds of a metal like " + m + " with a non-metal are usually <strong>ionic</strong>, even though ΔEN here is only " + f2(d) + ". The rule of thumb isn’t perfect!";
+    }
+    bb.warn.innerHTML = w; bb.warn.hidden = !w;
+  }
+  updateBuilder();
+
+  /* ---------- Panel B: Tug-of-War ---------- */
+  var enA = document.getElementById("enA"), enB = document.getElementById("enB");
+  var tw = {
+    rope: document.getElementById("twRope"), A: document.getElementById("twA"), B: document.getElementById("twB"),
+    ca: document.getElementById("twCA"), cb: document.getElementById("twCB"),
+    da: document.getElementById("twDA"), db: document.getElementById("twDB"),
+    av: document.getElementById("enAv"), bv: document.getElementById("enBv"),
+    calc: document.getElementById("twCalc"), verdict: document.getElementById("twVerdict")
+  };
+  function setTw(el, kind) {
+    el.textContent = kind === "n" ? "δ−" : kind === "p" ? "δ+" : kind === "N" ? "−" : kind === "P" ? "+" : "";
+    el.setAttribute("class", "bb-fade " + (kind === "n" || kind === "N" ? "dlabel-n" : kind ? "dlabel-p" : ""));
+    el.style.opacity = kind ? "1" : "0";
+  }
+  function updateTw() {
+    var a = h(parseFloat(enA.value)), b = h(parseFloat(enB.value));
+    tw.av.textContent = f2(a); tw.bv.textContent = f2(b);
+    var d = Math.abs(a - b), cls = classify(d), dir = b > a ? 1 : (a > b ? -1 : 0);
+    var shift = cls === "ionic" ? dir * 100 : dir * Math.min(d / 170, 1) * 70;
+    tw.rope.style.transform = "translateX(" + shift + "px)";
+    var lean = dir * Math.min(d / 170, 1) * 12;
+    tw.A.style.transform = "rotate(" + (dir < 0 ? -Math.abs(lean) : 0) + "deg)";
+    tw.B.style.transform = "rotate(" + (dir > 0 ? Math.abs(lean) : 0) + "deg)";
+    var ka = "", kb = "";
+    if (cls !== "nonpolar" && dir !== 0) {
+      var big = cls === "ionic";
+      if (dir > 0) { kb = big ? "N" : "n"; ka = big ? "P" : "p"; } else { ka = big ? "N" : "n"; kb = big ? "P" : "p"; }
+    }
+    setTw(tw.da, ka); setTw(tw.db, kb);
+    tw.ca.setAttribute("class", "atom" + (ka ? (ka.toLowerCase() === "n" ? " n" : " p") : ""));
+    tw.cb.setAttribute("class", "atom" + (kb ? (kb.toLowerCase() === "n" ? " n" : " p") : ""));
+    var hi = Math.max(a, b), lo = Math.min(a, b);
+    var label = { nonpolar: "Non-polar covalent", polar: "Polar covalent", ionic: "Mostly ionic" }[cls];
+    tw.calc.textContent = "ΔEN = " + f2(hi) + " " + MINUS + " " + f2(lo) + " = " + f2(d) + " → " + label;
+    var winner = dir > 0 ? "Atom B" : "Atom A", loser = dir > 0 ? "Atom A" : "Atom B";
+    var v;
+    if (dir === 0) v = "A draw! Both atoms pull equally, so the flag stays in the middle.";
+    else if (cls === "nonpolar") v = winner + " pulls only a tiny bit harder. The flag hardly moves: this is (nearly) fair sharing.";
+    else if (cls === "polar") v = winner + " pulls harder, so the flag moves towards it. " + winner + ' is <span class="neg">δ−</span>, ' + loser + ' is <span class="pos">δ+</span>. The bigger the difference, the further the flag moves.';
+    else v = winner + " wins completely! The electron is pulled right across to " + winner + ". That is <strong>ionic</strong> bonding, not sharing.";
+    tw.verdict.innerHTML = v;
+  }
+  enA.addEventListener("input", updateTw); enB.addEventListener("input", updateTw);
+  document.querySelectorAll(".presets button").forEach(function (b) {
+    b.addEventListener("click", function () { enA.value = b.dataset.a; enB.value = b.dataset.b; updateTw(); });
+  });
+  updateTw();
+
+  /* ---------- Panel C: Molecule Gallery ---------- */
+  // atoms: [symbol, x, y, radius, delta ('+', '-', or ''), label dx, label dy]; bonds: [i, j, order]
+  var MOLS = [
+    { id: "H2", f: "H<sub>2</sub>", name: "Hydrogen", atoms: [["H",150,110,30,""],["H",250,110,30,""]], bonds: [[0,1,1]],
+      text: "Both atoms are hydrogen, so they pull equally (2.20 − 2.20 = 0.00). <strong>Non-polar</strong> bond; non-polar molecule." },
+    { id: "O2", f: "O<sub>2</sub>", name: "Oxygen", atoms: [["O",145,110,34,""],["O",255,110,34,""]], bonds: [[0,1,2]],
+      text: "Two oxygen atoms share <em>two</em> pairs of electrons (a double bond), evenly (3.44 − 3.44 = 0.00). <strong>Non-polar</strong>." },
+    { id: "Cl2", f: "Cl<sub>2</sub>", name: "Chlorine", atoms: [["Cl",140,110,38,""],["Cl",260,110,38,""]], bonds: [[0,1,1]],
+      text: "Two chlorine atoms pull equally (3.16 − 3.16 = 0.00). <strong>Non-polar</strong> bond; non-polar molecule." },
+    { id: "HCl", f: "HCl", name: "Hydrogen chloride", atoms: [["H",140,115,28,"+",0,-48],["Cl",265,115,40,"-",0,-58]], bonds: [[0,1,1]],
+      text: 'Chlorine pulls harder (3.16 − 2.20 = 0.96). <strong>Polar</strong> bond: H is <span class="pos">δ+</span> and Cl is <span class="neg">δ−</span>.' },
+    { id: "H2O", f: "H<sub>2</sub>O", name: "Water", atoms: [["O",200,85,34,"-",0,-46],["H",125,155,26,"+",-46,0],["H",275,155,26,"+",46,0]], bonds: [[0,1,1],[0,2,1]],
+      text: 'Each O–H bond is <strong>polar</strong> (3.44 − 2.20 = 1.24). O is <span class="neg">δ−</span> and both H atoms are <span class="pos">δ+</span>. The molecule is bent, so water is a polar molecule.' },
+    { id: "NH3", f: "NH<sub>3</sub>", name: "Ammonia", atoms: [["N",200,95,34,"-",0,-46],["H",110,120,26,"+",-46,0],["H",290,120,26,"+",46,0],["H",200,178,26,"+",46,0]], bonds: [[0,1,1],[0,2,1],[0,3,1]],
+      text: 'Each N–H bond is <strong>polar</strong> (3.04 − 2.20 = 0.84). N is <span class="neg">δ−</span> and each H is <span class="pos">δ+</span>. Ammonia is a polar molecule.' },
+    { id: "CH4", f: "CH<sub>4</sub>", name: "Methane", atoms: [["C",200,110,32,""],["H",200,35,24,""],["H",200,185,24,""],["H",115,110,24,""],["H",285,110,24,""]], bonds: [[0,1,1],[0,2,1],[0,3,1],[0,4,1]],
+      text: "Each C–H bond has ΔEN = 2.55 − 2.20 = 0.35. That is less than 0.4, so by the rule of thumb the bonds are <strong>non-polar</strong>. Methane is a non-polar molecule." },
+    { id: "CO2", f: "CO<sub>2</sub>", name: "Carbon dioxide", challenge: true, atoms: [["O",90,110,32,"-",0,-46],["C",200,110,32,"+",0,-46],["O",310,110,32,"-",0,-46]], bonds: [[0,1,2],[1,2,2]],
+      text: '<span class="pill challenge-pill">Challenge</span> Each C=O bond is <strong>polar</strong> (3.44 − 2.55 = 0.89): O is <span class="neg">δ−</span>, C is <span class="pos">δ+</span>. But the molecule is a straight line, so the two equal pulls cancel. CO<sub>2</sub> is a <strong>non-polar molecule</strong>.' }
+  ];
+  var gallery = document.getElementById("gallery");
+  gallery.innerHTML = MOLS.map(function (m) {
+    return '<button type="button" class="mcard' + (m.challenge ? " challenge" : "") + '" data-id="' + m.id + '" aria-pressed="false"><b>' + m.f + "</b><span>" + m.name + (m.challenge ? " (challenge)" : "") + "</span></button>";
+  }).join("");
+  function molSvg(m) {
+    var out = "";
+    m.bonds.forEach(function (b) {
+      var A = m.atoms[b[0]], B = m.atoms[b[1]];
+      var dx = B[1] - A[1], dy = B[2] - A[2], L = Math.sqrt(dx * dx + dy * dy), nx = -dy / L, ny = dx / L;
+      var offs = b[2] === 2 ? [-7, 7] : [0];
+      offs.forEach(function (o) {
+        out += '<line class="bondline" x1="' + (A[1] + nx * o) + '" y1="' + (A[2] + ny * o) + '" x2="' + (B[1] + nx * o) + '" y2="' + (B[2] + ny * o) + '"/>';
+      });
+    });
+    m.atoms.forEach(function (a) {
+      out += '<circle class="atom ' + (a[4] === "-" ? "n" : a[4] === "+" ? "p" : "") + '" cx="' + a[1] + '" cy="' + a[2] + '" r="' + a[3] + '"/><text class="sym" x="' + a[1] + '" y="' + a[2] + '">' + a[0] + "</text>";
+      if (a[4]) out += '<text class="a-fade1 ' + (a[4] === "-" ? "dlabel-n" : "dlabel-p") + '" x="' + (a[1] + a[5]) + '" y="' + (a[2] + a[6] + 8) + '">' + (a[4] === "-" ? "δ−" : "δ+") + "</text>";
+    });
+    if (m.id === "CO2") out += '<g class="a-push" style="--dx:-8px">' + arrowL(185, 95, 180) + '</g><g class="a-push" style="--dx:8px">' + arrowR(215, 305, 180) + "</g>";
+    var lab = m.name + ". " + m.text.replace(/<[^>]+>/g, "");
+    return '<svg class="fig" viewBox="0 0 400 215" role="img" aria-label="' + lab.replace(/"/g, "") + '">' + out + "</svg>";
+  }
+  function showMol(id) {
+    var m = MOLS.filter(function (x) { return x.id === id; })[0];
+    gallery.querySelectorAll(".mcard").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.id === id)); });
+    document.getElementById("molFig").innerHTML = molSvg(m);
+    document.getElementById("molText").innerHTML = "<h3>" + m.f + " — " + m.name + "</h3><p>" + m.text + "</p>";
+  }
+  gallery.addEventListener("click", function (e) { var b = e.target.closest(".mcard"); if (b) showMol(b.dataset.id); });
+  showMol("H2O");
+
+  /* ---------- Panel D: Electronegativity Map ---------- */
+  // [symbol, name, protons, shells, EN, group, period, explanation]
+  var MAP = [
+    ["H", "Hydrogen", 1, [1], 2.20, 1, 1, "Hydrogen has only 1 proton, but its one shell sits very close to the nucleus with no inner electrons to shield it. So it gives a moderate tug on shared electrons."],
+    ["Li", "Lithium", 3, [2, 1], 0.98, 1, 2, "Lithium has 3 protons, but its outer electron is in the 2nd shell and the 2 inner electrons shield it. Its tug on shared electrons is weak."],
+    ["Be", "Beryllium", 4, [2, 2], 1.57, 2, 2, "Beryllium has one more proton than lithium, pulling on the same 2nd shell with the same shielding. So its tug is a little stronger: moderate."],
+    ["B", "Boron", 5, [2, 3], 2.04, 13, 2, "Boron has 5 protons pulling on the 2nd shell, still shielded by only 2 inner electrons. More protons at the same distance give a moderate tug."],
+    ["C", "Carbon", 6, [2, 4], 2.55, 14, 2, "Carbon has 6 protons pulling on its 2nd shell. That is a moderate tug, stronger than the atoms to its left."],
+    ["N", "Nitrogen", 7, [2, 5], 3.04, 15, 2, "Nitrogen has 7 protons, with the same close 2nd shell and the same 2 shielding electrons as carbon. More protons mean a strong tug."],
+    ["O", "Oxygen", 8, [2, 6], 3.44, 16, 2, "Oxygen has 8 protons, and its outer shell is close to the nucleus with only 2 inner electrons shielding it. That makes it a strong puller in the tug-of-war, second only to fluorine."],
+    ["F", "Fluorine", 9, [2, 7], 3.98, 17, 2, "Fluorine has 9 protons pulling on a close 2nd shell, with only 2 shielding electrons. It wins almost every tug-of-war: it is the strongest puller of all elements."],
+    ["Na", "Sodium", 11, [2, 8, 1], 0.93, 1, 3, "Sodium has 11 protons, but its single outer electron is out in the 3rd shell, shielded by 10 inner electrons. Its tug is very weak."],
+    ["Mg", "Magnesium", 12, [2, 8, 2], 1.31, 2, 3, "Magnesium has one more proton than sodium, with the same shells and shielding. Its tug is a bit stronger, but still weak."],
+    ["Al", "Aluminium", 13, [2, 8, 3], 1.61, 13, 3, "Aluminium has 13 protons pulling on its 3rd shell, shielded by 10 inner electrons. That gives a moderate tug."],
+    ["Si", "Silicon", 14, [2, 8, 4], 1.90, 14, 3, "Silicon has 14 protons pulling on the 3rd shell, with the same shielding as aluminium. One more proton gives a slightly stronger, moderate tug."],
+    ["P", "Phosphorus", 15, [2, 8, 5], 2.19, 15, 3, "Phosphorus has 15 protons, but its outer shell (the 3rd) is further out than nitrogen's. So it pulls less than nitrogen: a moderate tug."],
+    ["S", "Sulphur", 16, [2, 8, 6], 2.58, 16, 3, "Sulphur has 16 protons pulling on the 3rd shell. It pulls less than oxygen above it because its outer shell is further from the nucleus and more shielded: a moderate tug."],
+    ["Cl", "Chlorine", 17, [2, 8, 7], 3.16, 17, 3, "Chlorine has 17 protons pulling on its 3rd shell. It is a strong puller, though weaker than fluorine because its outer shell is further out and more shielded."],
+    ["K", "Potassium", 19, [2, 8, 8, 1], 0.82, 1, 4, "Potassium has 19 protons, but its outer electron is far out in the 4th shell, shielded by 18 inner electrons. It has the weakest tug on this map."],
+    ["Br", "Bromine", 35, [2, 8, 18, 7], 2.96, 17, 4, "Bromine has 35 protons, but its outer electrons are in the 4th shell, shielded by 28 inner electrons. It still pulls strongly, but less than chlorine."],
+    ["I", "Iodine", 53, [2, 8, 18, 18, 7], 2.66, 17, 5, "Iodine has 53 protons, but its outer shell is the 5th, the furthest out here, shielded by 46 inner electrons. Its pull is strong, but the weakest in its column."]
+  ];
+  var GROUP_COL = { 1: 1, 2: 2, 13: 3, 14: 4, 15: 5, 16: 6, 17: 7 };
+  var EN_STOPS = [[0.8, [47, 95, 196]], [2.2, [246, 236, 210]], [4.0, [168, 59, 20]]]; // blue → cream → rust
+  function enColour(v) {
+    if (v <= EN_STOPS[0][0]) return EN_STOPS[0][1];
+    for (var i = 1; i < EN_STOPS.length; i++) {
+      if (v <= EN_STOPS[i][0]) {
+        var a = EN_STOPS[i - 1], b = EN_STOPS[i], t = (v - a[0]) / (b[0] - a[0]);
+        return a[1].map(function (c, k) { return Math.round(c + (b[1][k] - c) * t); });
+      }
+    }
+    return EN_STOPS[EN_STOPS.length - 1][1];
+  }
+  function lum(c) {
+    var l = c.map(function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+    return 0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2];
+  }
+  function textOn(c) { // pick whichever text colour has more contrast (white vs near-black #111827, luminance ≈ 0.0106)
+    var L = lum(c);
+    return 1.05 / (L + 0.05) > (L + 0.05) / 0.0606 ? "#ffffff" : "#111827";
+  }
+  function pullWord(v) { return v < 1.5 ? "Weak pull" : v <= 2.6 ? "Moderate pull" : "Strong pull"; }
+
+  var enMap = document.getElementById("enMap");
+  document.getElementById("enLegendBar").style.background = "linear-gradient(to right, " +
+    EN_STOPS.map(function (s) { return "rgb(" + s[1].join(",") + ") " + ((s[0] - 0.8) / 3.2 * 100).toFixed(2) + "%"; }).join(", ") + ")";
+  document.getElementById("enLegendTicks").innerHTML = [0.8, 1.5, 2.2, 3.0, 4.0].map(function (v, i, arr) {
+    var pos = (v - 0.8) / 3.2 * 100;
+    var tf = i === 0 ? "none" : i === arr.length - 1 ? "translateX(-100%)" : "translateX(-50%)";
+    return '<span style="left:' + pos + "%;transform:" + tf + '">' + v.toFixed(1) + "</span>";
+  }).join("");
+  enMap.innerHTML = MAP.map(function (e) {
+    var c = enColour(e[4]);
+    return '<button type="button" class="enc" data-s="' + e[0] + '" aria-pressed="false" style="grid-column:' + GROUP_COL[e[5]] + ";grid-row:" + e[6] +
+      ";background:rgb(" + c.join(",") + ");color:" + textOn(c) + '" aria-label="' + e[1] + ", " + e[2] + " protons, electronegativity " + e[4].toFixed(2) + '">' +
+      '<span class="z">+' + e[2] + "</span><b>" + e[0] + '</b><span class="v">' + e[4].toFixed(2) + "</span></button>";
+  }).join("");
+
+  function mapAtomSvg(e) {
+    var C = 160, NR = 32, sh = e[3], n = sh.length, gap = Math.min(40, 114 / n), out = "";
+    sh.forEach(function (count, i) {
+      var r = NR + (i + 1) * gap, outer = i === n - 1;
+      if (count > 8) { // full inner shell: one shaded ring with the number, not every dot
+        out += '<circle cx="' + C + '" cy="' + C + '" r="' + r + '" fill="none" stroke="var(--line)" stroke-width="9" opacity=".6"/>';
+        var ang = (40 + i * 28) * Math.PI / 180, bx = C + r * Math.cos(ang), by = C + r * Math.sin(ang);
+        out += '<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="17" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>' +
+          '<text x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" text-anchor="middle" dominant-baseline="central" style="font-size:18px;font-weight:800">' + count + "</text>";
+      } else {
+        out += '<circle cx="' + C + '" cy="' + C + '" r="' + r + '" fill="none" stroke="' + (outer ? "var(--accent)" : "var(--line)") + '" stroke-width="' + (outer ? 3 : 2) + '"' + (outer ? ' stroke-dasharray="7 5"' : "") + "/>";
+        for (var k = 0; k < count; k++) {
+          var a = -Math.PI / 2 + k * 2 * Math.PI / count;
+          out += '<circle class="edot" cx="' + (C + r * Math.cos(a)).toFixed(1) + '" cy="' + (C + r * Math.sin(a)).toFixed(1) + '" r="6"/>';
+        }
+      }
+    });
+    out += '<circle cx="' + C + '" cy="' + C + '" r="' + NR + '" fill="#e0b12a" stroke="#8a6508" stroke-width="2.5"/>' +
+      '<text x="' + C + '" y="' + C + '" text-anchor="middle" dominant-baseline="central" style="font-size:' + (e[2] > 9 ? 22 : 24) + 'px;font-weight:800;fill:#2a1d00">+' + e[2] + "</text>";
+    return '<svg viewBox="0 0 320 320" role="img" aria-label="' + e[1] + " atom: nucleus with " + e[2] + " protons and shells of " + e[3].join(", ") + ' electrons.">' + out + "</svg>";
+  }
+  function showElement(sym) {
+    var e = MAP.filter(function (x) { return x[0] === sym; })[0], c = enColour(e[4]);
+    enMap.querySelectorAll(".enc").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.s === sym)); });
+    document.getElementById("enDetail").innerHTML = "<h3>" + e[1] + " (" + e[0] + ")</h3>" +
+      '<div class="md-top"><div class="fig-box">' + mapAtomSvg(e) + "</div>" +
+      '<dl class="en-facts"><dt>Protons</dt><dd>+' + e[2] + "</dd><dt>Shells</dt><dd>" + e[3].join(", ") + "</dd>" +
+      "<dt>Electronegativity</dt><dd>" + e[4].toFixed(2) + '<span class="en-chip" style="background:rgb(' + c.join(",") + ");color:" + textOn(c) + '">' + pullWord(e[4]) + "</span></dd></dl></div>" +
+      "<p>" + e[7] + "</p>" +
+      (e[3].some(function (x) { return x > 8; }) ? '<p class="ptable-note">Numbered rings are full inner shells: they shield the outer shell.</p>' : "");
+  }
+  enMap.addEventListener("click", function (ev) { var b = ev.target.closest(".enc"); if (b) showElement(b.dataset.s); });
+  showElement("O");
+
+  /* ---------- Quiz ---------- */
+  var QUESTIONS = [
+    { q: "What is a covalent bond?",
+      o: ["Two atoms sharing a pair of electrons", "One atom giving an electron away to another atom", "Two nuclei sticking together", "Two atoms sharing their protons"],
+      hint: "The prefix “co-” means “together”, as in co-operate.",
+      ex: "In a covalent bond, two atoms share a pair of electrons. Each atom gives one electron to the pair." },
+    { q: "What does electronegativity measure?",
+      o: ["How strongly an atom pulls shared electrons towards itself", "How many electrons an atom has", "How heavy an atom is", "How many bonds an atom can make"],
+      hint: "Think of the tug-of-war over the electron pair.",
+      ex: "Electronegativity tells us how strongly an atom pulls the shared electrons in a bond towards itself." },
+    { q: "Which of these molecules has a non-polar covalent bond?",
+      o: ["Cl<sub>2</sub> (Cl–Cl)", "HCl (H–Cl)", "H<sub>2</sub>O (O–H)", "NaCl (Na–Cl)"],
+      hint: "Look for a bond between two identical atoms.",
+      ex: "In Cl–Cl both atoms are the same, so they pull equally (ΔEN = 0.00). The electrons are shared evenly." },
+    { q: "Which bond is polar?",
+      o: ["H–Cl", "H–H", "Cl–Cl", "O=O"],
+      hint: "A polar bond is between two atoms that pull differently.",
+      ex: "H–Cl is polar: Cl (3.16) pulls harder than H (2.20). The other three bonds are between identical atoms." },
+    { q: "N = 3.04 and H = 2.20. What is ΔEN for the N–H bond?",
+      o: ["0.84", "5.24", "0.74", "1.84"],
+      hint: "Subtract the smaller value from the bigger value.",
+      ex: "ΔEN = 3.04 − 2.20 = 0.84. This is between 0.4 and 1.7, so N–H is a polar bond." },
+    { q: "C = 2.55 and H = 2.20, so ΔEN = 0.35. Using the rule of thumb, what kind of bond is C–H?",
+      o: ["Non-polar covalent", "Polar covalent", "Mostly ionic", "No bond forms"],
+      hint: "Compare 0.35 with the first cut-off in the rule of thumb.",
+      ex: "0.35 is less than 0.4, so by the rule of thumb C–H is treated as non-polar covalent." },
+    { q: "In the H–Cl bond, which atom is δ−?",
+      o: ["Cl, because it is more electronegative", "H, because it is more electronegative", "H, because it is the smaller atom", "Neither — both atoms are neutral"],
+      hint: "The shared electrons move towards the atom that pulls harder.",
+      ex: "Cl (3.16) pulls harder than H (2.20), so the shared pair shifts towards Cl. Cl becomes δ− and H becomes δ+." },
+    { q: "In a water molecule (H<sub>2</sub>O), where are the partial charges?",
+      o: ["O is δ− and each H is δ+", "O is δ+ and each H is δ−", "There are no partial charges", "All three atoms are δ−"],
+      hint: "Oxygen’s electronegativity is 3.44; hydrogen’s is 2.20.",
+      ex: "Oxygen pulls the shared electrons harder, so O is δ− and each H is δ+." },
+    { q: "Na = 0.93 and Cl = 3.16 (ΔEN = 2.23). What type of bond is Na–Cl?",
+      o: ["Mostly ionic — the electron is transferred", "Non-polar covalent", "Polar covalent", "No bond forms"],
+      hint: "Is 2.23 above or below 1.7?",
+      ex: "2.23 is greater than 1.7, so the electron moves completely from Na to Cl. Sodium chloride is ionic." },
+    { q: "Why do oil and water not mix?",
+      o: ["Water is polar and oil is non-polar, so water molecules stick to each other and push the oil out", "Oil is heavier than water", "Water is non-polar and oil is polar", "Oil molecules are made of ions"],
+      hint: "Think about which one has δ+ and δ− ends.",
+      ex: "Polar water molecules attract each other strongly. Non-polar oil has no δ+ or δ− ends, so it is pushed out and stays separate." }
+  ];
+  var quizBox = document.getElementById("quizBox");
+  var qs; // working copy: [{..., opts:[{t, correct}] }]
+  var qi, score, wrong, answered;
+
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function startQuiz(doShuffle) {
+    qs = QUESTIONS.map(function (q) {
+      var opts = q.o.map(function (t, i) { return { t: t, correct: i === 0 }; });
+      return { q: q.q, hint: q.hint, ex: q.ex, opts: doShuffle ? shuffle(opts) : opts };
+    });
+    if (doShuffle) shuffle(qs);
+    else qs.forEach(function (q, i) { // fixed, varied answer positions on the first attempt
+      var pos = [1, 3, 0, 2, 2, 0, 3, 1, 0, 2][i];
+      var c = q.opts.shift(); q.opts.splice(pos, 0, c);
+    });
+    qi = 0; score = 0; wrong = []; renderQ();
+  }
+  function renderQ() {
+    var q = qs[qi]; answered = false;
+    quizBox.innerHTML =
+      '<div class="quiz-top"><strong>Question ' + (qi + 1) + " of " + qs.length + '</strong><span class="muted">Score: ' + score + "</span></div>" +
+      '<div class="progress" aria-hidden="true" style="margin-bottom:14px"><div style="width:' + ((qi) / qs.length * 100) + '%"></div></div>' +
+      '<h2 id="qText" tabindex="-1" style="font-size:1.3em">' + q.q + "</h2>" +
+      '<div class="options" role="group" aria-labelledby="qText">' + q.opts.map(function (o, i) {
+        return '<button type="button" class="opt" data-i="' + i + '"><span class="letter" aria-hidden="true">' + "ABCD"[i] + "</span><span>" + o.t + '</span><span class="mark"></span></button>';
+      }).join("") + "</div>" +
+      '<div class="qbtns"><button type="button" class="btn secondary" id="hintBtn" aria-expanded="false" aria-controls="hintBox">💡 Hint</button>' +
+      '<button type="button" class="btn" id="qNext" disabled>' + (qi === qs.length - 1 ? "See my score" : "Next question →") + "</button></div>" +
+      '<div class="hint-box" id="hintBox" hidden>' + q.hint + "</div>" +
+      '<div id="qFeedback" aria-live="polite"></div>';
+    quizBox.querySelectorAll(".opt").forEach(function (b) { b.addEventListener("click", function () { answer(+b.dataset.i); }); });
+    var hb = document.getElementById("hintBtn"), hbox = document.getElementById("hintBox");
+    hb.addEventListener("click", function () { hbox.hidden = !hbox.hidden; hb.setAttribute("aria-expanded", String(!hbox.hidden)); });
+    document.getElementById("qNext").addEventListener("click", function () {
+      qi++; if (qi < qs.length) { renderQ(); document.getElementById("qText").focus(); } else renderResults();
+    });
+  }
+  function answer(i) {
+    if (answered) return; answered = true;
+    var q = qs[qi], chosen = q.opts[i], ci = 0;
+    q.opts.forEach(function (o, k) { if (o.correct) ci = k; });
+    var btns = quizBox.querySelectorAll(".opt");
+    btns.forEach(function (b, k) {
+      b.disabled = true;
+      if (k === ci) { b.classList.add("correct"); b.querySelector(".mark").textContent = "✓ Correct answer"; }
+      else if (k === i) { b.classList.add("wrong"); b.querySelector(".mark").textContent = "✗ Your answer"; }
+    });
+    var fb = document.getElementById("qFeedback");
+    if (chosen.correct) { score++; fb.innerHTML = '<div class="feedback ok"><strong>✓ Correct!</strong> ' + q.ex + "</div>"; }
+    else {
+      wrong.push({ q: q.q, yours: chosen.t, right: q.opts[ci].t });
+      fb.innerHTML = '<div class="feedback no"><strong>✗ Not quite.</strong> The correct answer is: <strong>' + q.opts[ci].t + "</strong>. " + q.ex + "</div>";
+    }
+    quizBox.querySelector(".quiz-top .muted").textContent = "Score: " + score;
+    var nx = document.getElementById("qNext"); nx.disabled = false; nx.focus();
+  }
+  function renderResults() {
+    var n = qs.length, msg;
+    if (score === n) msg = "Outstanding! A perfect score — you really understand polar and non-polar bonds.";
+    else if (score >= 8) msg = "Excellent work! You have a strong grip on this topic. Check the one or two you missed below.";
+    else if (score >= 5) msg = "Good effort! You understand the main ideas. Look at the answers below, then try again.";
+    else msg = "Keep going — every scientist learns by trying! Look back at the Learn slides, play with the Bond Builder, then have another go.";
+    var list = wrong.length ? '<h3>Questions to review</h3><ol class="review">' + wrong.map(function (w) {
+      return "<li><strong>" + w.q + '</strong><br>Your answer: <span style="color:var(--bad)">✗ ' + w.yours + '</span><br>Correct answer: <span style="color:var(--ok)">✓ ' + w.right + "</span></li>";
+    }).join("") + "</ol>" : "<p>You didn’t get any wrong. Brilliant!</p>";
+    quizBox.innerHTML = '<h2 id="qText" tabindex="-1">Your result</h2><p class="score-big">' + score + " / " + n + "</p><p>" + msg + "</p>" + list +
+      '<button type="button" class="btn" id="retry">↻ Try again (questions shuffled)</button>';
+    document.getElementById("retry").addEventListener("click", function () { startQuiz(true); document.getElementById("qText").focus(); });
+    document.getElementById("qText").focus();
+  }
+  startQuiz(false);
+
+  /* ---------- Teacher Notes dialog ---------- */
+  var teacherDlg = document.getElementById("teacherDlg");
+  var teacherBtn = document.getElementById("teacherBtn");
+  teacherBtn.addEventListener("click", function () {
+    if (typeof teacherDlg.showModal === "function") teacherDlg.showModal(); else teacherDlg.setAttribute("open", "");
+  });
+  function closeTeacher() { if (teacherDlg.close) teacherDlg.close(); else teacherDlg.removeAttribute("open"); teacherBtn.focus(); }
+  document.getElementById("teacherClose").addEventListener("click", closeTeacher);
+  teacherDlg.addEventListener("click", function (e) { if (e.target === teacherDlg) closeTeacher(); });
+
+  renderSlide();
+})();
+</script>
+</body>
+</html>
