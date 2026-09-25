@@ -193,7 +193,6 @@ svg text { font-family: inherit; fill: var(--ink); }
 .rope { stroke: var(--rope); stroke-width: 6; stroke-linecap: round; }
 
 /* ---------- Animations (all disabled by reduced-motion) ---------- */
-@keyframes spin { to { transform: rotate(360deg); } }
 @keyframes inLeft { from { transform: translateX(-60px); } to { transform: translateX(0); } }
 @keyframes inRight { from { transform: translateX(60px); } to { transform: translateX(0); } }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
@@ -208,8 +207,6 @@ svg text { font-family: inherit; fill: var(--ink); }
 @keyframes shift12 { from { transform: translateX(0); } to { transform: translateX(12px); } }
 @keyframes wiggle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
 
-.a-spin-slow { transform-origin: 120px 118px; animation: spin 16s linear infinite; }
-.a-spin-fast { transform-origin: 120px 118px; animation: spin 9s linear infinite; }
 .a-inL { animation: inLeft 1.6s ease-out .4s both; }
 .a-inR { animation: inRight 1.6s ease-out .4s both; }
 .a-pulse { animation: pulse 2.4s ease-in-out infinite; }
@@ -231,6 +228,18 @@ svg text { font-family: inherit; fill: var(--ink); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Opening slide: 3D-style atom (canvas) ---------- */
+.atom3d { display: block; width: 100%; max-width: 440px; aspect-ratio: 36 / 26; margin: 0 auto; }
+.a3-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; font-size: 16px; margin: 6px 4px 0; }
+.a3-legend span { display: flex; align-items: center; gap: 8px; }
+.a3-sw { flex: none; width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
+.a3-sw.nuc { background: radial-gradient(circle at 35% 35%, #fff3c4, #d4a017 60%, #8a6508); }
+.a3-sw.a3-el { background: radial-gradient(circle at 35% 35%, var(--surface), var(--ink) 65%); }
+.a3-sw.a3-in { background: var(--pos); opacity: .7; }
+.a3-sw.a3-out { background: var(--neg); opacity: .7; }
+.a3-note { font-size: 15px; color: var(--muted); margin: 8px 4px 0; }
+@media (max-width: 420px) { .a3-legend { grid-template-columns: 1fr; } }
 
 /* ---------- Explore ---------- */
 .subnav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -335,6 +344,52 @@ dialog.teacher::backdrop { background: rgba(10, 15, 30, .6); }
 .t-body dt { font-weight: 800; margin-top: .6em; }
 .t-body dd { margin: 0 0 .4em 1em; }
 
+/* ---------- Electronegativity Map ---------- */
+.map-layout { display: grid; gap: 20px; align-items: start; }
+@media (min-width: 900px) { .map-layout { grid-template-columns: 3fr 2fr; } }
+.en-legend { margin-bottom: 10px; }
+.en-legend-labels { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; }
+.en-legend-bar { height: 18px; border-radius: 6px; border: 2px solid var(--line); }
+.en-legend-ticks { position: relative; height: 22px; font-size: 14px; color: var(--muted); }
+.en-legend-ticks span { position: absolute; transform: translateX(-50%); }
+.en-legend-ticks span::before { content: ""; position: absolute; left: 50%; top: -5px; height: 5px; border-left: 2px solid var(--muted); }
+.en-trend-x { font-size: 15px; font-weight: 700; color: var(--muted); margin: 2px 0 6px 28px; }
+.en-map-row { display: flex; gap: 6px; }
+.en-trend-y { writing-mode: vertical-rl; font-size: 15px; font-weight: 700; color: var(--muted); text-align: center; width: 22px; flex: none; }
+.en-map { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.enc {
+  position: relative; min-height: 60px; border-radius: 8px; border: 2px solid rgba(0,0,0,.25); padding: 3px 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1;
+}
+.enc .z { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: 700; }
+.enc b { font-size: 20px; margin-top: 6px; }
+.enc .v { font-size: 13px; font-weight: 600; }
+.enc[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--ink); z-index: 1; }
+@media (max-width: 600px) {
+  .en-trend-y { display: none; }
+  .en-trend-x { margin-left: 0; }
+  .en-map { gap: 3px; }
+  .enc { min-height: 54px; border-radius: 6px; }
+  .enc b { font-size: 17px; }
+  .enc .v { font-size: 12px; }
+  .enc .z { font-size: 10px; left: 3px; }
+}
+.map-detail .fig-box { padding: 6px; }
+.map-detail svg { display: block; width: 100%; max-width: 250px; margin: 0 auto; }
+.map-detail h3 { margin: 0 0 8px; }
+.md-top { display: grid; gap: 10px; margin-bottom: 8px; }
+.map-detail p { font-size: 18px; margin-bottom: .4em; }
+@media (min-width: 900px) {
+  .md-top { grid-template-columns: 200px 1fr; align-items: center; }
+  .md-top .en-facts { grid-template-columns: 1fr; gap: 0; }
+  .md-top .en-facts dd { margin-bottom: 6px; }
+  .en-chip { margin-left: 0; margin-top: 2px; }
+}
+.en-facts { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0 0 8px; font-size: .95em; }
+.en-facts dt { font-weight: 700; }
+.en-facts dd { margin: 0; }
+.en-chip { display: inline-block; padding: 0 10px; border-radius: 999px; font-size: .85em; font-weight: 700; border: 1px solid rgba(0,0,0,.25); margin-left: 6px; }
+
 footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px; border-top: 1px solid var(--line); }
 </style>
 </head>
@@ -387,6 +442,7 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
     <button type="button" data-panel="A" aria-pressed="true">A. Bond Builder</button>
     <button type="button" data-panel="B" aria-pressed="false">B. Tug-of-War</button>
     <button type="button" data-panel="C" aria-pressed="false">C. Molecule Gallery</button>
+    <button type="button" data-panel="D" aria-pressed="false">D. Electronegativity Map</button>
   </div>
 
   <!-- Panel A -->
@@ -519,6 +575,29 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
     <div class="fig-box"><div id="molFig"></div></div>
     <div aria-live="polite" id="molText" style="margin-top:12px"></div>
   </div>
+
+  <!-- Panel D -->
+  <div class="panel card" id="panel-D" hidden>
+    <h2>Electronegativity Map</h2>
+    <p>Tap an element to see its atom. Laid out like the periodic table, the pull gets <strong>stronger across a row</strong> and <strong>weaker down a column</strong>.</p>
+    <div class="map-layout">
+      <div>
+        <div class="en-legend" aria-hidden="true">
+          <div class="en-legend-labels"><span>← weak pull</span><span>strong pull →</span></div>
+          <div class="en-legend-bar" id="enLegendBar"></div>
+          <div class="en-legend-ticks" id="enLegendTicks"></div>
+        </div>
+        <p class="sr-only">Colour scale: blue means a weak pull (about 0.8), cream is in the middle (about 2.2), and rust red means a strong pull (about 4.0).</p>
+        <div class="en-trend-x" aria-hidden="true">Across a row: pull increases →</div>
+        <div class="en-map-row">
+          <div class="en-trend-y" aria-hidden="true">Down a column: pull decreases →</div>
+          <div class="en-map" id="enMap" role="group" aria-label="Electronegativity map"></div>
+        </div>
+        <p class="ptable-note">Each tile shows +protons, symbol and electronegativity. Here, colours show <strong>pulling strength</strong>, not charge. Only some elements are shown.</p>
+      </div>
+      <div class="map-detail" id="enDetail" aria-live="polite"></div>
+    </div>
+  </div>
 </section>
 
 <!-- ================= QUIZ ================= -->
@@ -547,6 +626,7 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
     <ul>
       <li><strong>Across a period (left → right): increases.</strong> Nuclear charge rises while electrons are added to the same shell, so the nucleus pulls bonding electrons more strongly. Period 2 from this page: Li 0.98 → C 2.55 → N 3.04 → O 3.44 → F 3.98.</li>
       <li><strong>Down a group: decreases.</strong> Extra shells put the bonding electrons further from the nucleus and shield them. Group 17: F 3.98 &gt; Cl 3.16 &gt; Br 2.96 &gt; I 2.66. Group 1: Li 0.98 &gt; Na 0.93 &gt; K 0.82.</li>
+      <li>The <strong>Electronegativity Map</strong> (Explore → D) shows both trends at once and links them to proton count, shell distance and shielding.</li>
       <li>Fluorine is the most electronegative element. Metals (left side) have low values; non-metals (top right) have high values.</li>
       <li>Values used here are on the <strong>Pauling scale</strong> and have no unit. Noble gases are usually left out because they rarely form bonds.</li>
     </ul>
@@ -624,7 +704,7 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
       ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></g></svg>'
       : '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>';
   }
-  themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncThemeBtn(); });
+  themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncThemeBtn(); if (atomRedraw) atomRedraw(false); });
   syncThemeBtn();
 
   /* ---------- Main navigation ---------- */
@@ -635,6 +715,7 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
     ["learn", "explore", "quiz"].forEach(function (v) { document.getElementById("view-" + v).hidden = v !== name; });
     navBtns.forEach(function (b) { if (b.dataset.view === name) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     window.scrollTo(0, 0);
+    if (name === "learn" && typeof atomRedraw === "function") atomRedraw(true);
   }
   navBtns.forEach(function (b) { b.addEventListener("click", function () { showView(b.dataset.view); }); });
 
@@ -649,6 +730,110 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
   function arrowL(x1, x2, y) { return '<line class="arrow" x1="' + x1 + '" y1="' + y + '" x2="' + (x2 + 10) + '" y2="' + y + '"/><path class="arrowhead" d="M' + x2 + " " + y + " l12 -7 v14 z\"/>"; }
   function svg(vb, label, inner) { return '<div class="fig-box"><svg class="fig" viewBox="' + vb + '" role="img" aria-label="' + label + '">' + inner + "</svg></div>"; }
 
+  /* ---------- Opening slide: 3D-style atom on canvas ---------- */
+  var atomRedraw = null; // set while the canvas is on screen; used after theme change / resize
+  function hexRgb(hx) {
+    hx = hx.trim().replace("#", "");
+    if (hx.length === 3) hx = hx.replace(/./g, "$&$&");
+    var n = parseInt(hx, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+  function startAtom3D() {
+    var cv = document.getElementById("atom3d");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var W = 360, H = 260, CX = 180, CY = 130, FOCAL = 650;
+    // Inner shell uses the δ+ colour, outer shell the δ− colour – here as a depth grade, not charge.
+    var shells = [
+      { R: 72, n: 2, key: "--pos", speed: 0.9, tx: 1.0, tz: 0.5, a0: 0.3 },
+      { R: 134, n: 6, key: "--neg", speed: 0.42, tx: 1.05, tz: -0.35, a0: 0 }
+    ];
+    // 8 protons: a back layer and a front layer, so the cluster looks round
+    var protons = [[-8, -8, 1], [8, -8, 1], [-8, 8, 1], [8, 8, 1], [0, -12, 0], [-12, 0, 0], [12, 0, 0], [0, 12, 0]];
+    function size() {
+      var w = cv.getBoundingClientRect().width;
+      if (!w) return;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(w * dpr); cv.height = Math.round(w * H / W * dpr);
+      ctx.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
+    }
+    function point(sh, a, phi) {
+      var x = sh.R * Math.cos(a), y = sh.R * Math.sin(a), z = 0, t;
+      t = y * Math.cos(sh.tx) - z * Math.sin(sh.tx); z = y * Math.sin(sh.tx) + z * Math.cos(sh.tx); y = t;   // tilt (X axis)
+      t = x * Math.cos(sh.tz) - y * Math.sin(sh.tz); y = x * Math.sin(sh.tz) + y * Math.cos(sh.tz); x = t;   // turn (Z axis)
+      t = x * Math.cos(phi) + z * Math.sin(phi); z = -x * Math.sin(phi) + z * Math.cos(phi); x = t;        // slow turn of whole atom (Y axis)
+      var s = FOCAL / (FOCAL + z);
+      return { x: CX + x * s, y: CY + y * s, z: z, s: s };
+    }
+    function sphere(x, y, r, light, mid, dark) {
+      var g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+      g.addColorStop(0, light); g.addColorStop(0.55, mid); g.addColorStop(1, dark);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+    function draw(t) {
+      var cs = getComputedStyle(document.documentElement);
+      var ink = hexRgb(cs.getPropertyValue("--ink")), surf = hexRgb(cs.getPropertyValue("--surface"));
+      var phi = Math.sin(t * 0.25) * 0.5;
+      ctx.clearRect(0, 0, W, H);
+      var rings = shells.map(function (sh) {
+        var col = hexRgb(cs.getPropertyValue(sh.key)), pts = [];
+        for (var i = 0; i <= 96; i++) pts.push(point(sh, i / 96 * Math.PI * 2, phi));
+        var els = [];
+        for (var k = 0; k < sh.n; k++) els.push(point(sh, sh.a0 + k * Math.PI * 2 / sh.n + t * sh.speed, phi));
+        return { sh: sh, col: col, pts: pts, els: els };
+      });
+      // 1. translucent shell discs, outer first, graded from the centre outwards
+      rings.slice().reverse().forEach(function (r) {
+        var g = ctx.createRadialGradient(CX, CY, 0, CX, CY, r.sh.R);
+        g.addColorStop(0, rgba(r.col, 0.04)); g.addColorStop(0.75, rgba(r.col, 0.12)); g.addColorStop(1, rgba(r.col, 0.26));
+        ctx.fillStyle = g; ctx.beginPath();
+        r.pts.forEach(function (p, i) { if (i) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y); });
+        ctx.closePath(); ctx.fill();
+      });
+      function ringHalf(r, front) {
+        ctx.strokeStyle = rgba(r.col, front ? 0.95 : 0.4); ctx.lineWidth = front ? 3 : 2;
+        ctx.beginPath();
+        for (var i = 1; i < r.pts.length; i++) {
+          var a = r.pts[i - 1], b = r.pts[i];
+          if ((a.z + b.z <= 0) === front) { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); }
+        }
+        ctx.stroke();
+      }
+      function electron(p, front) {
+        var r = 8 * p.s;
+        sphere(p.x, p.y, r, rgba(surf, front ? 1 : 0.7), rgba(ink, front ? 0.85 : 0.45), rgba(ink, front ? 1 : 0.55));
+      }
+      // 2. back half of each shell and electrons behind the nucleus
+      rings.forEach(function (r) { ringHalf(r, false); });
+      rings.forEach(function (r) { r.els.forEach(function (p) { if (p.z > 0) electron(p, false); }); });
+      // 3. nucleus: glow + 8 proton spheres marked "+"
+      var glow = ctx.createRadialGradient(CX, CY, 4, CX, CY, 40);
+      glow.addColorStop(0, "rgba(234,179,8,0.35)"); glow.addColorStop(1, "rgba(234,179,8,0)");
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(CX, CY, 40, 0, Math.PI * 2); ctx.fill();
+      ctx.font = "bold 11px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      protons.forEach(function (q) {
+        var x = CX + q[0], y = CY + q[1];
+        if (q[2]) sphere(x, y, 9.5, "#f5d97a", "#b8860b", "#6b4e05");
+        else sphere(x, y, 10, "#fff3c4", "#d4a017", "#8a6508");
+        ctx.fillStyle = q[2] ? "#fff8dc" : "#3b2a00"; ctx.fillText("+", x, y + 0.5);
+      });
+      // 4. front half of each shell and electrons in front
+      rings.forEach(function (r) { ringHalf(r, true); });
+      rings.forEach(function (r) { r.els.forEach(function (p) { if (p.z <= 0) electron(p, true); }); });
+    }
+    size();
+    var t0 = performance.now();
+    atomRedraw = function (resize) { if (resize) size(); if (reduceMotion) draw(1.2); };
+    if (reduceMotion) { draw(1.2); return; }
+    (function frame(now) {
+      if (!cv.isConnected) return; // slide changed: stop this loop
+      if (cv.offsetParent !== null && !document.hidden) draw((now - t0) / 1000);
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+  window.addEventListener("resize", function () { if (atomRedraw) atomRedraw(true); });
+
   /* ---------- Slides ---------- */
   var SLIDES = [
     {
@@ -657,15 +842,10 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
         "<li>An atom is most <strong>stable</strong> when its outer shell is full: 2 electrons for the first shell (duplet), 8 for the outer shell of most other atoms (octet).</li>" +
         "<li>Oxygen has electrons arranged as 2, 6. Its outer shell needs 2 more.</li>" +
         "<li>To fill their outer shells, atoms join together. This link is called a <strong>chemical bond</strong>.</li></ul>",
-      fig: svg("0 0 400 240", "An oxygen atom: a nucleus with 2 electrons in the inner shell and 6 in the outer shell, spinning around it.",
-        '<circle class="shell" cx="120" cy="118" r="46"/><circle class="shell" cx="120" cy="118" r="88"/>' +
-        '<circle cx="120" cy="118" r="22" fill="var(--atom)" stroke="var(--atom-line)" stroke-width="2.5"/><text class="sym" x="120" y="118" style="font-size:18px">8+</text>' +
-        '<g class="a-spin-fast"><circle class="edot" cx="166" cy="118" r="7"/><circle class="edot" cx="74" cy="118" r="7"/></g>' +
-        '<g class="a-spin-slow">' + [0, 60, 120, 180, 240, 300].map(function (a) { var r = a * Math.PI / 180; return '<circle class="edot" cx="' + (120 + 88 * Math.cos(r)).toFixed(1) + '" cy="' + (118 + 88 * Math.sin(r)).toFixed(1) + '" r="7"/>'; }).join("") + "</g>" +
-        '<text class="lbl" x="232" y="58">● = electron</text>' +
-        '<text class="lbl" x="232" y="124">8+ = nucleus</text>' +
-        '<text class="lbl" x="232" y="182">outer shell:</text><text class="lbl" x="232" y="206">6 electrons,</text><text class="lbl" x="232" y="230">needs 8</text>' +
-        '<text class="lbl" x="120" y="232" text-anchor="middle" font-weight="700">Oxygen (2, 6)</text>')
+      fig: '<div class="fig-box"><canvas id="atom3d" class="atom3d" role="img" aria-label="A 3D-style oxygen atom. The nucleus holds 8 protons. 2 electrons spin in a small, see-through inner shell and 6 electrons spin in a larger outer shell."></canvas>' +
+        '<div class="a3-legend"><span><i class="a3-sw nuc"></i>Nucleus: 8 protons (+)</span><span><i class="a3-sw a3-el"></i>Electron</span>' +
+        '<span><i class="a3-sw a3-in"></i>Inner shell: 2 electrons</span><span><i class="a3-sw a3-out"></i>Outer shell: 6 (needs 8)</span></div>' +
+        '<p class="a3-note">Oxygen (2, 6). In this picture the colours show shell depth (inner → outer), not charge. Neutrons are not shown.</p></div>'
     },
     {
       title: "A covalent bond means sharing",
@@ -833,6 +1013,8 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
     progBar.setAttribute("aria-valuenow", String(slideIdx + 1));
     prevBtn.disabled = slideIdx === 0;
     nextBtn.textContent = slideIdx === SLIDES.length - 1 ? "Go to Explore →" : "Next →";
+    atomRedraw = null;
+    if (slideIdx === 0) startAtom3D();
   }
   function goSlide(d) {
     var n = slideIdx + d;
@@ -858,7 +1040,7 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
   subBtns.forEach(function (b) {
     b.addEventListener("click", function () {
       subBtns.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-      ["A", "B", "C"].forEach(function (p) { document.getElementById("panel-" + p).hidden = p !== b.dataset.panel; });
+      ["A", "B", "C", "D"].forEach(function (p) { document.getElementById("panel-" + p).hidden = p !== b.dataset.panel; });
     });
   });
 
@@ -1067,6 +1249,99 @@ footer { text-align: center; font-size: 14px; color: var(--muted); padding: 16px
   }
   gallery.addEventListener("click", function (e) { var b = e.target.closest(".mcard"); if (b) showMol(b.dataset.id); });
   showMol("H2O");
+
+  /* ---------- Panel D: Electronegativity Map ---------- */
+  // [symbol, name, protons, shells, EN, group, period, explanation]
+  var MAP = [
+    ["H", "Hydrogen", 1, [1], 2.20, 1, 1, "Hydrogen has only 1 proton, but its one shell sits very close to the nucleus with no inner electrons to shield it. So it gives a moderate tug on shared electrons."],
+    ["Li", "Lithium", 3, [2, 1], 0.98, 1, 2, "Lithium has 3 protons, but its outer electron is in the 2nd shell and the 2 inner electrons shield it. Its tug on shared electrons is weak."],
+    ["Be", "Beryllium", 4, [2, 2], 1.57, 2, 2, "Beryllium has one more proton than lithium, pulling on the same 2nd shell with the same shielding. So its tug is a little stronger: moderate."],
+    ["B", "Boron", 5, [2, 3], 2.04, 13, 2, "Boron has 5 protons pulling on the 2nd shell, still shielded by only 2 inner electrons. More protons at the same distance give a moderate tug."],
+    ["C", "Carbon", 6, [2, 4], 2.55, 14, 2, "Carbon has 6 protons pulling on its 2nd shell. That is a moderate tug, stronger than the atoms to its left."],
+    ["N", "Nitrogen", 7, [2, 5], 3.04, 15, 2, "Nitrogen has 7 protons, with the same close 2nd shell and the same 2 shielding electrons as carbon. More protons mean a strong tug."],
+    ["O", "Oxygen", 8, [2, 6], 3.44, 16, 2, "Oxygen has 8 protons, and its outer shell is close to the nucleus with only 2 inner electrons shielding it. That makes it a strong puller in the tug-of-war, second only to fluorine."],
+    ["F", "Fluorine", 9, [2, 7], 3.98, 17, 2, "Fluorine has 9 protons pulling on a close 2nd shell, with only 2 shielding electrons. It wins almost every tug-of-war: it is the strongest puller of all elements."],
+    ["Na", "Sodium", 11, [2, 8, 1], 0.93, 1, 3, "Sodium has 11 protons, but its single outer electron is out in the 3rd shell, shielded by 10 inner electrons. Its tug is very weak."],
+    ["Mg", "Magnesium", 12, [2, 8, 2], 1.31, 2, 3, "Magnesium has one more proton than sodium, with the same shells and shielding. Its tug is a bit stronger, but still weak."],
+    ["Al", "Aluminium", 13, [2, 8, 3], 1.61, 13, 3, "Aluminium has 13 protons pulling on its 3rd shell, shielded by 10 inner electrons. That gives a moderate tug."],
+    ["Si", "Silicon", 14, [2, 8, 4], 1.90, 14, 3, "Silicon has 14 protons pulling on the 3rd shell, with the same shielding as aluminium. One more proton gives a slightly stronger, moderate tug."],
+    ["P", "Phosphorus", 15, [2, 8, 5], 2.19, 15, 3, "Phosphorus has 15 protons, but its outer shell (the 3rd) is further out than nitrogen's. So it pulls less than nitrogen: a moderate tug."],
+    ["S", "Sulphur", 16, [2, 8, 6], 2.58, 16, 3, "Sulphur has 16 protons pulling on the 3rd shell. It pulls less than oxygen above it because its outer shell is further from the nucleus and more shielded: a moderate tug."],
+    ["Cl", "Chlorine", 17, [2, 8, 7], 3.16, 17, 3, "Chlorine has 17 protons pulling on its 3rd shell. It is a strong puller, though weaker than fluorine because its outer shell is further out and more shielded."],
+    ["K", "Potassium", 19, [2, 8, 8, 1], 0.82, 1, 4, "Potassium has 19 protons, but its outer electron is far out in the 4th shell, shielded by 18 inner electrons. It has the weakest tug on this map."],
+    ["Br", "Bromine", 35, [2, 8, 18, 7], 2.96, 17, 4, "Bromine has 35 protons, but its outer electrons are in the 4th shell, shielded by 28 inner electrons. It still pulls strongly, but less than chlorine."],
+    ["I", "Iodine", 53, [2, 8, 18, 18, 7], 2.66, 17, 5, "Iodine has 53 protons, but its outer shell is the 5th, the furthest out here, shielded by 46 inner electrons. Its pull is strong, but the weakest in its column."]
+  ];
+  var GROUP_COL = { 1: 1, 2: 2, 13: 3, 14: 4, 15: 5, 16: 6, 17: 7 };
+  var EN_STOPS = [[0.8, [47, 95, 196]], [2.2, [246, 236, 210]], [4.0, [168, 59, 20]]]; // blue → cream → rust
+  function enColour(v) {
+    if (v <= EN_STOPS[0][0]) return EN_STOPS[0][1];
+    for (var i = 1; i < EN_STOPS.length; i++) {
+      if (v <= EN_STOPS[i][0]) {
+        var a = EN_STOPS[i - 1], b = EN_STOPS[i], t = (v - a[0]) / (b[0] - a[0]);
+        return a[1].map(function (c, k) { return Math.round(c + (b[1][k] - c) * t); });
+      }
+    }
+    return EN_STOPS[EN_STOPS.length - 1][1];
+  }
+  function lum(c) {
+    var l = c.map(function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+    return 0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2];
+  }
+  function textOn(c) { // pick whichever text colour has more contrast (white vs near-black #111827, luminance ≈ 0.0106)
+    var L = lum(c);
+    return 1.05 / (L + 0.05) > (L + 0.05) / 0.0606 ? "#ffffff" : "#111827";
+  }
+  function pullWord(v) { return v < 1.5 ? "Weak pull" : v <= 2.6 ? "Moderate pull" : "Strong pull"; }
+
+  var enMap = document.getElementById("enMap");
+  document.getElementById("enLegendBar").style.background = "linear-gradient(to right, " +
+    EN_STOPS.map(function (s) { return "rgb(" + s[1].join(",") + ") " + ((s[0] - 0.8) / 3.2 * 100).toFixed(2) + "%"; }).join(", ") + ")";
+  document.getElementById("enLegendTicks").innerHTML = [0.8, 1.5, 2.2, 3.0, 4.0].map(function (v, i, arr) {
+    var pos = (v - 0.8) / 3.2 * 100;
+    var tf = i === 0 ? "none" : i === arr.length - 1 ? "translateX(-100%)" : "translateX(-50%)";
+    return '<span style="left:' + pos + "%;transform:" + tf + '">' + v.toFixed(1) + "</span>";
+  }).join("");
+  enMap.innerHTML = MAP.map(function (e) {
+    var c = enColour(e[4]);
+    return '<button type="button" class="enc" data-s="' + e[0] + '" aria-pressed="false" style="grid-column:' + GROUP_COL[e[5]] + ";grid-row:" + e[6] +
+      ";background:rgb(" + c.join(",") + ");color:" + textOn(c) + '" aria-label="' + e[1] + ", " + e[2] + " protons, electronegativity " + e[4].toFixed(2) + '">' +
+      '<span class="z">+' + e[2] + "</span><b>" + e[0] + '</b><span class="v">' + e[4].toFixed(2) + "</span></button>";
+  }).join("");
+
+  function mapAtomSvg(e) {
+    var C = 160, NR = 32, sh = e[3], n = sh.length, gap = Math.min(40, 114 / n), out = "";
+    sh.forEach(function (count, i) {
+      var r = NR + (i + 1) * gap, outer = i === n - 1;
+      if (count > 8) { // full inner shell: one shaded ring with the number, not every dot
+        out += '<circle cx="' + C + '" cy="' + C + '" r="' + r + '" fill="none" stroke="var(--line)" stroke-width="9" opacity=".6"/>';
+        var ang = (40 + i * 28) * Math.PI / 180, bx = C + r * Math.cos(ang), by = C + r * Math.sin(ang);
+        out += '<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="17" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>' +
+          '<text x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" text-anchor="middle" dominant-baseline="central" style="font-size:18px;font-weight:800">' + count + "</text>";
+      } else {
+        out += '<circle cx="' + C + '" cy="' + C + '" r="' + r + '" fill="none" stroke="' + (outer ? "var(--accent)" : "var(--line)") + '" stroke-width="' + (outer ? 3 : 2) + '"' + (outer ? ' stroke-dasharray="7 5"' : "") + "/>";
+        for (var k = 0; k < count; k++) {
+          var a = -Math.PI / 2 + k * 2 * Math.PI / count;
+          out += '<circle class="edot" cx="' + (C + r * Math.cos(a)).toFixed(1) + '" cy="' + (C + r * Math.sin(a)).toFixed(1) + '" r="6"/>';
+        }
+      }
+    });
+    out += '<circle cx="' + C + '" cy="' + C + '" r="' + NR + '" fill="#e0b12a" stroke="#8a6508" stroke-width="2.5"/>' +
+      '<text x="' + C + '" y="' + C + '" text-anchor="middle" dominant-baseline="central" style="font-size:' + (e[2] > 9 ? 22 : 24) + 'px;font-weight:800;fill:#2a1d00">+' + e[2] + "</text>";
+    return '<svg viewBox="0 0 320 320" role="img" aria-label="' + e[1] + " atom: nucleus with " + e[2] + " protons and shells of " + e[3].join(", ") + ' electrons.">' + out + "</svg>";
+  }
+  function showElement(sym) {
+    var e = MAP.filter(function (x) { return x[0] === sym; })[0], c = enColour(e[4]);
+    enMap.querySelectorAll(".enc").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.s === sym)); });
+    document.getElementById("enDetail").innerHTML = "<h3>" + e[1] + " (" + e[0] + ")</h3>" +
+      '<div class="md-top"><div class="fig-box">' + mapAtomSvg(e) + "</div>" +
+      '<dl class="en-facts"><dt>Protons</dt><dd>+' + e[2] + "</dd><dt>Shells</dt><dd>" + e[3].join(", ") + "</dd>" +
+      "<dt>Electronegativity</dt><dd>" + e[4].toFixed(2) + '<span class="en-chip" style="background:rgb(' + c.join(",") + ");color:" + textOn(c) + '">' + pullWord(e[4]) + "</span></dd></dl></div>" +
+      "<p>" + e[7] + "</p>" +
+      (e[3].some(function (x) { return x > 8; }) ? '<p class="ptable-note">Numbered rings are full inner shells: they shield the outer shell.</p>' : "");
+  }
+  enMap.addEventListener("click", function (ev) { var b = ev.target.closest(".enc"); if (b) showElement(b.dataset.s); });
+  showElement("O");
 
   /* ---------- Quiz ---------- */
   var QUESTIONS = [
